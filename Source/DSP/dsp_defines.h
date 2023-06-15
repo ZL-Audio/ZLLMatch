@@ -98,10 +98,11 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "measurement";
         auto static constexpr name = "Measurement";
-        inline auto static const choices = juce::StringArray { "RMS" };
+        inline auto static const choices = juce::StringArray { "RMS", "LUFS" };
         int static constexpr defaultI = 0;
         enum {
-            rms
+            rms,
+            lufs
         };
     };
 
