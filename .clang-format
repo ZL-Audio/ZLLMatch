@@ -22,7 +22,7 @@ BinPackArguments: false
 BinPackParameters: false
 BreakAfterJavaFieldAnnotations: false
 BreakBeforeBinaryOperators: NonAssignment
-BreakBeforeBraces: Custom
+#BreakBeforeBraces: Custom
 BraceWrapping: # Allman except for lambdas
   AfterClass: true
   AfterCaseLabel: true

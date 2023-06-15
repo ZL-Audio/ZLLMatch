@@ -1,14 +1,17 @@
 #pragma once
 
+#include "DSP/Controller.h"
+#include "GUI/interface_defines.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #if (MSVC)
-#include "ipps.h"
+    #include "ipps.h"
 #endif
 
-class PluginProcessor : public juce::AudioProcessor
-{
+class PluginProcessor : public juce::AudioProcessor {
 public:
+    juce::AudioProcessorValueTreeState parameters;
+
     PluginProcessor();
     ~PluginProcessor() override;
 
@@ -38,6 +41,10 @@ public:
     void getStateInformation (juce::MemoryBlock& destData) override;
     void setStateInformation (const void* data, int sizeInBytes) override;
 
+    Controller<float>* getController();
+
 private:
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginProcessor)
+    Controller<float> controller;
+    ControllerAttach<float> controllerAttach;
 };
