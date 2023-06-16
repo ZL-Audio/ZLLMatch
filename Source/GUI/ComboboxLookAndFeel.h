@@ -16,7 +16,6 @@ public:
         float cornerSize = fontSize * 0.5f;
         if (!box.isPopupActive()) {
             auto boxBounds = juce::Rectangle<float> ((float) width * 0.1f, (float) height * 0.2f, (float) width * 0.8f, (float) height * 0.6f);
-
             ZLInterface::fillRoundedRectangle (g, boxBounds, cornerSize);
         } else {
             auto boxBounds = juce::Rectangle<float> ((float) width * 0.1f, (float) height * 0.2f, (float) width * 0.8f, (float) height * 0.8f);
@@ -29,7 +28,7 @@ public:
     }
 
     void drawLabel (juce::Graphics& g, juce::Label& label) override {
-        if (label.isEnabled()) {
+        if (editable) {
             g.setColour (ZLInterface::TextColor);
         } else {
             g.setColour (ZLInterface::TextInactiveColor);
@@ -63,7 +62,7 @@ public:
 
     void drawPopupMenuItem (juce::Graphics& g, const juce::Rectangle<int>& area, const bool isSeparator, const bool isActive, const bool isHighlighted, const bool isTicked, const bool hasSubMenu, const juce::String& text, const juce::String& shortcutKeyText, const juce::Drawable* icon, const juce::Colour* const textColourToUse) override {
         juce::ignoreUnused (isSeparator, hasSubMenu, shortcutKeyText, icon, textColourToUse);
-        if ((isHighlighted || isTicked) && isActive) {
+        if ((isHighlighted || isTicked) && isActive && editable) {
             g.setColour (ZLInterface::TextColor);
         } else {
             g.setColour (ZLInterface::TextInactiveColor);
@@ -88,9 +87,14 @@ public:
         fontSize = size;
     }
 
+    void setEditable (bool f) {
+        editable = f;
+    }
+
 private:
     constexpr static float scale = 1.0f;
     std::atomic<float> fontSize = 0.0f;
+    std::atomic<bool> editable = true;
 };
 
 #endif //ZLINFLATOR_COMBOBOXLOOKANDFEEL_H

@@ -41,7 +41,8 @@ public:
     }
 
     void setEnabled (bool shouldBeEnabled) {
-        comboBox.setEnabled(shouldBeEnabled);
+        myLookAndFeel.setEditable(shouldBeEnabled);
+        comboBox.repaint();
         label.setEnabled(shouldBeEnabled);
     }
 

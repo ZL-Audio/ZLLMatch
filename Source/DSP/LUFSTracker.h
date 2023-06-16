@@ -16,7 +16,7 @@ public:
     }
 
     void prepare (const juce::dsp::ProcessSpec& spec) {
-        meter.prepareToPlay (spec.sampleRate, static_cast<int> (spec.numChannels), static_cast<int> (spec.sampleRate), 10);
+        meter.prepareToPlay (spec.sampleRate, static_cast<int> (spec.numChannels), static_cast<int> (spec.sampleRate), 100);
     }
 
     void reset() {
