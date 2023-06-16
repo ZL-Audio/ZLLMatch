@@ -18,6 +18,8 @@ public:
 
     void setFontSize (float size);
 
+    void setMode(int modeID);
+
 private:
     std::unique_ptr<RotarySliderComponent> strengthSlider, boundSlider, gateSlider, targetSlider;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::SliderAttachment> sliderAttachments;

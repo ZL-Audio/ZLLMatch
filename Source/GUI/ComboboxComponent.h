@@ -13,6 +13,7 @@ public:
         setLookAndFeel(&myLookAndFeel);
         comboBox.addItemList(choices, 1);
         comboBox.setLookAndFeel(&myLookAndFeel);
+        comboBox.setScrollWheelEnabled(false);
         addAndMakeVisible(comboBox);
         label.setText(labelText, juce::dontSendNotification);
         label.setLookAndFeel(&nameLookAndFeel);
@@ -37,6 +38,11 @@ public:
     void setFontSize(float size) {
         myLookAndFeel.setFontSize(size);
         nameLookAndFeel.setFontSize(size);
+    }
+
+    void setEnabled (bool shouldBeEnabled) {
+        comboBox.setEnabled(shouldBeEnabled);
+        label.setEnabled(shouldBeEnabled);
     }
 
 private:

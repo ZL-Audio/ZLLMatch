@@ -8,34 +8,39 @@
 
 class ButtonComponent : public juce::Component {
 public:
-    explicit ButtonComponent (const juce::String &labelText) {
-        setLookAndFeel(&myLookAndFeel);
+    explicit ButtonComponent (const juce::String& labelText) {
+        setLookAndFeel (&myLookAndFeel);
         button.setClickingTogglesState (true);
-        button.setLookAndFeel(&myLookAndFeel);
-        addAndMakeVisible(button);
-        label.setText(labelText, juce::dontSendNotification);
-        label.setLookAndFeel(&nameLookAndFeel);
-        addAndMakeVisible(label);
+        button.setLookAndFeel (&myLookAndFeel);
+        addAndMakeVisible (button);
+        label.setText (labelText, juce::dontSendNotification);
+        label.setLookAndFeel (&nameLookAndFeel);
+        addAndMakeVisible (label);
     }
 
     void resized() override {
         auto bounds = getLocalBounds();
-        bounds.removeFromTop(int (0.1 * bounds.getHeight()));
-        button.setBounds(0, (int) (labelHeight * (float)bounds.getHeight()), bounds.getWidth(), (int) ((float)bounds.getWidth() * buttonRatio));
-        label.setBoundsRelative(0.f, 0.0f, 1.f, labelHeight);
+        bounds.removeFromTop (int (0.1 * bounds.getHeight()));
+        button.setBounds (0, (int) (labelHeight * (float) bounds.getHeight()), bounds.getWidth(), (int) ((float) bounds.getWidth() * buttonRatio));
+        label.setBoundsRelative (0.f, 0.0f, 1.f, labelHeight);
     }
 
-    void paint(juce::Graphics &g) override {
-        g.fillAll(ZLInterface::BackgroundColor);
+    void paint (juce::Graphics& g) override {
+        g.fillAll (ZLInterface::BackgroundColor);
     }
 
-    juce::ToggleButton &getButton() {  return button; }
+    juce::ToggleButton& getButton() { return button; }
 
-    juce::Label &getLabel() { return label; }
+    juce::Label& getLabel() { return label; }
 
-    void setFontSize(float size) {
-        myLookAndFeel.setFontSize(size);
-        nameLookAndFeel.setFontSize(size);
+    void setFontSize (float size) {
+        myLookAndFeel.setFontSize (size);
+        nameLookAndFeel.setFontSize (size);
+    }
+
+    void setEnabled (bool shouldBeEnabled) {
+        button.setEnabled (shouldBeEnabled);
+        label.setEnabled (shouldBeEnabled);
     }
 
 private:

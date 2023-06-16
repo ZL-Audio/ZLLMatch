@@ -71,16 +71,6 @@ public:
         diffs = ZLDsp::Base64StringToVector<GainPos<FloatType>> (str);
     }
 
-//    void dataToFiles() {
-//        juce::File resourceFile = juce::File ("/Volumes/Ramdisk/test.txt");
-//        if (auto output = std::unique_ptr<juce::FileOutputStream> (resourceFile.createOutputStream())) {
-//            output->setPosition (0);
-//            output->truncate();
-//            juce::MemoryBlock mb (diffs.data(), diffs.size() * sizeof(GainPos<FloatType>));
-//            output->writeText (mb.toBase64Encoding(), false, false, nullptr);
-//        }
-//    }
-
 private:
     std::atomic<int64_t> m_position = 0;
     size_t prev_id = 0;

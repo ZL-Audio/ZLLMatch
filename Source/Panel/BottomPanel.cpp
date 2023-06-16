@@ -1,6 +1,6 @@
 #include "BottomPanel.h"
 
-BottomPanel::BottomPanel(juce::AudioProcessorValueTreeState& parameters) {
+BottomPanel::BottomPanel (juce::AudioProcessorValueTreeState& parameters) {
     // init sliders
     std::array sliderList { &strengthSlider, &boundSlider, &gateSlider, &targetSlider };
     std::array sliderID { ZLDsp::strength::ID, ZLDsp::bound::ID, ZLDsp::gate::ID, ZLDsp::target::ID };
@@ -21,22 +21,38 @@ void BottomPanel::resized() {
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
-    grid.templateRows = {Track(Fr(1))};
-    grid.templateColumns = {Track(Fr(1)), Track(Fr(1)), Track(Fr(1)), Track(Fr(1))};
+    grid.templateRows = { Track (Fr (1)) };
+    grid.templateColumns = { Track (Fr (1)), Track (Fr (1)), Track (Fr (1)), Track (Fr (1)) };
 
     juce::Array<juce::GridItem> items;
-    items.add(*strengthSlider);
-    items.add(*boundSlider);
-    items.add(*gateSlider);
-    items.add(*targetSlider);
+    items.add (*strengthSlider);
+    items.add (*boundSlider);
+    items.add (*targetSlider);
+    items.add (*gateSlider);
     grid.items = items;
 
-    grid.performLayout(getLocalBounds());
+    grid.performLayout (getLocalBounds());
 }
 
 void BottomPanel::setFontSize (float size) {
     std::array sliderList { &strengthSlider, &boundSlider, &gateSlider, &targetSlider };
     for (auto const& s : sliderList) {
         (*s)->setFontSize (size);
+    }
+}
+
+void BottomPanel::setMode (int modeID) {
+    if (modeID == ZLDsp::mode::learn) {
+        boundSlider->setEnabled (true);
+        gateSlider->setEnabled (true);
+        targetSlider->setEnabled (true);
+    } else if (modeID == ZLDsp::mode::effect) {
+        boundSlider->setEnabled (true);
+        gateSlider->setEnabled (false);
+        targetSlider->setEnabled (false);
+    } else if (modeID == ZLDsp::mode::envelope) {
+        boundSlider->setEnabled (false);
+        gateSlider->setEnabled (false);
+        targetSlider->setEnabled (false);
     }
 }

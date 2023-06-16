@@ -22,6 +22,8 @@ public:
 
     void setFontSize (float size);
 
+    void setMode(int modeID);
+
 private:
     LogoPanel logoPanel;
     std::unique_ptr<ButtonComponent> ceilButton;

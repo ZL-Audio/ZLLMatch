@@ -47,3 +47,11 @@ void MidPanel::setFontSize (float size) {
     ceilButton->setFontSize(size);
     gainValue->setFontSize(size);
 }
+
+void MidPanel::setMode(int modeID) {
+    if (modeID == ZLDsp::mode::envelope) {
+        ceilButton->setEnabled(false);
+    } else {
+        ceilButton->setEnabled(true);
+    }
+}

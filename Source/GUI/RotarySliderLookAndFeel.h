@@ -30,7 +30,11 @@ public:
         auto transform = juce::AffineTransform::translation(
                 -0.0f + bounds.getCentreX(), -0.375f * diameter + bounds.getCentreY()).rotated(
                 rotationAngle, bounds.getCentreX(), bounds.getCentreY());
-        g.setColour(ZLInterface::TextColor);
+        if (slider.isEnabled()) {
+            g.setColour (ZLInterface::TextColor);
+        } else {
+            g.setColour (ZLInterface::TextInactiveColor);
+        }
         g.fillPath(path, transform);
     }
 
@@ -54,7 +58,11 @@ public:
     }
 
     void drawLabel(juce::Graphics &g, juce::Label &label) override {
-        g.setColour(ZLInterface::TextColor);
+        if (label.isEnabled()) {
+            g.setColour (ZLInterface::TextColor);
+        } else {
+            g.setColour (ZLInterface::TextInactiveColor);
+        }
         auto labelArea{label.getLocalBounds().toFloat()};
         auto center = labelArea.getCentre();
         if (fontSize > 0) {

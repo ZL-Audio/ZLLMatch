@@ -19,6 +19,8 @@ public:
 
     void setFontSize (float size);
 
+    void setMode(int modeID);
+
 private:
     std::unique_ptr<ComboboxComponent> modeBox, loudnessBox, periodBox, sideBox;
     juce::OwnedArray<juce::AudioProcessorValueTreeState::ComboBoxAttachment> comboboxAttachments;

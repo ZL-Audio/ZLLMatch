@@ -12,7 +12,7 @@ public:
     }
 
     void drawComboBox (juce::Graphics& g, int width, int height, bool isButtonDown, int, int, int, int, juce::ComboBox& box) override {
-        juce::ignoreUnused(isButtonDown);
+        juce::ignoreUnused (isButtonDown);
         float cornerSize = fontSize * 0.5f;
         if (!box.isPopupActive()) {
             auto boxBounds = juce::Rectangle<float> ((float) width * 0.1f, (float) height * 0.2f, (float) width * 0.8f, (float) height * 0.6f);
@@ -29,7 +29,11 @@ public:
     }
 
     void drawLabel (juce::Graphics& g, juce::Label& label) override {
-        g.setColour (ZLInterface::TextColor);
+        if (label.isEnabled()) {
+            g.setColour (ZLInterface::TextColor);
+        } else {
+            g.setColour (ZLInterface::TextInactiveColor);
+        }
         auto labelArea = label.getLocalBounds().toFloat();
         auto center = labelArea.getCentre();
         if (fontSize > 0) {
@@ -52,13 +56,13 @@ public:
     }
 
     void getIdealPopupMenuItemSize (const juce::String& text, const bool isSeparator, int standardMenuItemHeight, int& idealWidth, int& idealHeight) override {
-        juce::ignoreUnused(text, isSeparator, standardMenuItemHeight);
+        juce::ignoreUnused (text, isSeparator, standardMenuItemHeight);
         idealWidth = int (0);
         idealHeight = int (fontSize * ZLInterface::FontLarge * 1.2f);
     }
 
     void drawPopupMenuItem (juce::Graphics& g, const juce::Rectangle<int>& area, const bool isSeparator, const bool isActive, const bool isHighlighted, const bool isTicked, const bool hasSubMenu, const juce::String& text, const juce::String& shortcutKeyText, const juce::Drawable* icon, const juce::Colour* const textColourToUse) override {
-        juce::ignoreUnused(isSeparator, hasSubMenu, shortcutKeyText, icon, textColourToUse);
+        juce::ignoreUnused (isSeparator, hasSubMenu, shortcutKeyText, icon, textColourToUse);
         if ((isHighlighted || isTicked) && isActive) {
             g.setColour (ZLInterface::TextColor);
         } else {

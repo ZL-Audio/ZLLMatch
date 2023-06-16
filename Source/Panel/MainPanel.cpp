@@ -7,6 +7,8 @@ MainPanel::MainPanel (juce::AudioProcessorValueTreeState& parameters,
     addAndMakeVisible (topPanel);
     addAndMakeVisible (midPanel);
     addAndMakeVisible (bottomPanel);
+    setMode(ZLDsp::mode::defaultI);
+    parameters.addParameterListener(ZLDsp::mode::ID, this);
 }
 
 MainPanel::~MainPanel() = default;
@@ -42,4 +44,15 @@ void MainPanel::resized() {
     auto padding = bound.getHeight() * 0.09142857f;
     bound = bound.withSizeKeepingCentre(bound.getWidth() - padding, bound.getHeight() - padding);
     grid.performLayout(bound.toNearestInt());
+}
+
+void MainPanel::parameterChanged (const juce::String& parameterID, float newValue) {
+    auto modeID = static_cast<int> (newValue);
+    setMode(modeID);
+}
+
+void MainPanel::setMode(int modeID) {
+    midPanel.setMode(modeID);
+    topPanel.setMode(modeID);
+    bottomPanel.setMode(modeID);
 }

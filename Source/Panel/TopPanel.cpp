@@ -1,6 +1,6 @@
 #include "TopPanel.h"
 
-TopPanel::TopPanel(juce::AudioProcessorValueTreeState& parameters) {
+TopPanel::TopPanel (juce::AudioProcessorValueTreeState& parameters) {
     // init combobox
     std::array comboboxList { &modeBox, &loudnessBox, &periodBox, &sideBox };
     std::array comboboxID { ZLDsp::mode::ID, ZLDsp::loudness::ID, ZLDsp::period::ID, ZLDsp::side::ID };
@@ -22,22 +22,34 @@ void TopPanel::resized() {
     using Track = juce::Grid::TrackInfo;
     using Fr = juce::Grid::Fr;
 
-    grid.templateRows = {Track(Fr(1))};
-    grid.templateColumns = {Track(Fr(1)), Track(Fr(1)), Track(Fr(1)), Track(Fr(1))};
+    grid.templateRows = { Track (Fr (1)) };
+    grid.templateColumns = { Track (Fr (1)), Track (Fr (1)), Track (Fr (1)), Track (Fr (1)) };
 
     juce::Array<juce::GridItem> items;
-    items.add(*modeBox);
-    items.add(*loudnessBox);
-    items.add(*periodBox);
-    items.add(*sideBox);
+    items.add (*modeBox);
+    items.add (*loudnessBox);
+    items.add (*sideBox);
+    items.add (*periodBox);
     grid.items = items;
 
-    grid.performLayout(getLocalBounds());
+    grid.performLayout (getLocalBounds());
 }
 
 void TopPanel::setFontSize (float size) {
     std::array comboboxList { &modeBox, &loudnessBox, &periodBox, &sideBox };
     for (auto const& c : comboboxList) {
         (*c)->setFontSize (size);
+    }
+}
+
+void TopPanel::setMode (int modeID) {
+    if (modeID == ZLDsp::mode::learn) {
+        loudnessBox->setEnabled (true);
+        periodBox->setEnabled (true);
+        sideBox->setEnabled (true);
+    } else {
+        loudnessBox->setEnabled (false);
+        periodBox->setEnabled (false);
+        sideBox->setEnabled (false);
     }
 }
