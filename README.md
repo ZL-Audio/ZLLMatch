@@ -28,12 +28,14 @@ See the releases for the latest version.
 
 ## License
 
-ZLInflator has a MIT license, as found in the [LICENSE](LICENSE) file.
+ZLLMatch has a MIT license, as found in the [LICENSE](LICENSE) file.
 
 Copyright (c) 2023 - [zsliu98](https://github.com/zsliu98)
 
 JUCE framework from [JUCE](https://github.com/juce-framework/JUCE)
 
 JUCE template from [pamplejuce](https://github.com/sudara/pamplejuce)
+
+LUFSMeter from [klangfreund](https://github.com/klangfreund/LUFSMeter)
 
 Font from CMU Open Sans, Font Awesome and MiSans.

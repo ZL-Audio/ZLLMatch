@@ -61,9 +61,9 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
-    auto channels = static_cast<juce::uint32> (juce::jmin(getMainBusNumInputChannels(), getMainBusNumOutputChannels()));
-    juce::dsp::ProcessSpec spec{sampleRate, static_cast<juce::uint32> (samplesPerBlock), channels};
-    controller.prepare(spec);
+    auto channels = static_cast<juce::uint32> (juce::jmin (getMainBusNumInputChannels(), getMainBusNumOutputChannels()));
+    juce::dsp::ProcessSpec spec { sampleRate, static_cast<juce::uint32> (samplesPerBlock), channels };
+    controller.prepare (spec);
 }
 
 void PluginProcessor::releaseResources() {
@@ -105,6 +105,8 @@ juce::AudioProcessorEditor* PluginProcessor::createEditor() {
 //==============================================================================
 void PluginProcessor::getStateInformation (juce::MemoryBlock& destData) {
     auto state = parameters.copyState();
+    auto conState = state.getOrCreateChildWithName ("conState", nullptr);
+    conState.setProperty ("diffs", controller.toString(), nullptr);
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
@@ -113,9 +115,12 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes) {
     std::unique_ptr<juce::XmlElement> xmlState (
         getXmlFromBinary (data, sizeInBytes));
 
-    if (xmlState.get() != nullptr)
-        if (xmlState->hasTagName (parameters.state.getType()))
+    if (xmlState != nullptr) {
+        if (xmlState->hasTagName (parameters.state.getType())) {
             parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
+            controller.fromString (xmlState->getChildByName ("conState")->getStringAttribute ("diffs", ""));
+        }
+    }
 }
 
 //==============================================================================

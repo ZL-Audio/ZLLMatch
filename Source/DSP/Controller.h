@@ -17,9 +17,9 @@ public:
         reset();
     }
 
-    void prepare(const juce::dsp::ProcessSpec &spec) {
-        mainMonitor.prepare(spec);
-        targetMonitor.prepare(spec);
+    void prepare (const juce::dsp::ProcessSpec& spec) {
+        mainMonitor.prepare (spec);
+        targetMonitor.prepare (spec);
     }
 
     void reset() {
@@ -112,8 +112,8 @@ public:
 
     void setLoudnessID (int ID) {
         loudnessID = ID;
-        mainMonitor.setLoudnessID(ID);
-        targetMonitor.setLoudnessID(ID);
+        mainMonitor.setLoudnessID (ID);
+        targetMonitor.setLoudnessID (ID);
     }
 
     void setPeriodID (int ID) {
@@ -130,6 +130,14 @@ public:
 
     FloatType getGain() {
         return gain.load();
+    }
+
+    juce::String toString() {
+        return matcher.toString();
+    }
+
+    void fromString (const juce::String& str) {
+        matcher.fromString (str);
     }
 
 private:
@@ -175,7 +183,7 @@ public:
     }
 
     void addParameters() {
-        std::array IDs { ZLDsp::loudness::ID, ZLDsp::period::ID, ZLDsp::side::ID, ZLDsp::mode::ID, ZLDsp::ceil::ID, ZLDsp::strength::ID, ZLDsp::gate::ID, ZLDsp::target::ID, ZLDsp::bound::ID, ZLDsp::gain::ID};
+        std::array IDs { ZLDsp::loudness::ID, ZLDsp::period::ID, ZLDsp::side::ID, ZLDsp::mode::ID, ZLDsp::ceil::ID, ZLDsp::strength::ID, ZLDsp::gate::ID, ZLDsp::target::ID, ZLDsp::bound::ID, ZLDsp::gain::ID };
 
         apvts->createAndAddParameter (ZLDsp::loudness::get());
         apvts->createAndAddParameter (ZLDsp::period::get());
@@ -205,7 +213,7 @@ public:
         } else if (parameterID == ZLDsp::mode::ID) {
             modeID = static_cast<int> (newValue);
             if (modeID == ZLDsp::mode::effect) {
-                startTimerHz(30);
+                startTimerHz (30);
             } else {
                 stopTimer();
             }

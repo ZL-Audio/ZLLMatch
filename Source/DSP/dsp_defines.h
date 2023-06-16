@@ -129,6 +129,35 @@ namespace ZLDsp {
             aux
         };
     };
+
+    template <typename T, size_t elementSize>
+    juce::String VectorToBase64String (const T& vec) {
+        juce::MemoryBlock mb (vec.data(), vec.size() * elementSize);
+        return mb.toBase64Encoding();
+    }
+
+    template <typename T>
+    juce::String VectorToBase64String (const std::vector<T>& vec) {
+        return VectorToBase64String<std::vector<T>, sizeof (T)> (vec);
+    }
+
+    template <typename T>
+    std::vector<T> Base64StringToVector (const juce::String& str) {
+        juce::MemoryBlock mb;
+        if (mb.fromBase64Encoding (str)) {
+            juce::Array<T> arr (static_cast<T*> (mb.getData()),
+                static_cast<int> (mb.getSize() / sizeof (T)));
+            std::vector<T> vec;
+            vec.resize (static_cast<size_t> (arr.size()));
+            for (size_t i = 0; i < vec.size(); ++i) {
+                vec[i] = arr[static_cast<int> (i)];
+            }
+            return vec;
+        }
+
+        jassertfalse;
+        return {};
+    }
 }
 
 #endif //ZLLMATCH_DSP_DEFINES_H
