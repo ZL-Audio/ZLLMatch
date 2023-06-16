@@ -1,0 +1,12 @@
+# .gitignore
+# ==========
+
+# Exclude vim swap files
+*.swp
+ 
+# Exclude OS X folder attributes
+.DS_Store
+ 
+# Excluded folders:
+_finalBinaries
+

@@ -63,16 +63,16 @@ public:
         return static_cast<FloatType> (0);
     }
 
-    void dataToFiles() {
-        juce::File resourceFile = juce::File ("/Volumes/Ramdisk/test.txt");
-        if (auto output = std::unique_ptr<juce::FileOutputStream> (resourceFile.createOutputStream())) {
-            output->setPosition (0);
-            output->truncate();
-            for (size_t i = 0; i < diffs.size(); ++i) {
-                output->writeText (juce::String (diffs[i].position) + " " + juce::String (diffs[i].gain) + "\n", false, false, nullptr);
-            }
-        }
-    }
+//    void dataToFiles() {
+//        juce::File resourceFile = juce::File ("/Volumes/Ramdisk/test.txt");
+//        if (auto output = std::unique_ptr<juce::FileOutputStream> (resourceFile.createOutputStream())) {
+//            output->setPosition (0);
+//            output->truncate();
+//            for (size_t i = 0; i < diffs.size(); ++i) {
+//                output->writeText (juce::String (diffs[i].position) + " " + juce::String (diffs[i].gain) + "\n", false, false, nullptr);
+//            }
+//        }
+//    }
 
 private:
     std::atomic<int64_t> m_position = 0;

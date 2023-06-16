@@ -14,16 +14,20 @@ public:
         reset();
     }
 
+    void prepare(const juce::dsp::ProcessSpec &spec) {
+        juce::ignoreUnused(spec);
+    }
+
     void reset() {
         ms.clear();
     }
 
-    FloatType getPeriodLoudness() {
+    FloatType getIntegratedLoudness() {
         auto meanSquare = std::reduce (ms.begin(), ms.end()) / static_cast<FloatType> (ms.size());
-        return std::sqrt(meanSquare);
+        return juce::Decibels::gainToDecibels (std::sqrt (meanSquare));
     }
 
-    void process (const juce::AudioBuffer<float>& buffer) {
+    void process (const juce::AudioBuffer<float>& buffer, FloatType gate) {
         FloatType _ms = 0;
         for (auto channel = 0; channel < buffer.getNumChannels(); channel++) {
             auto data = buffer.getReadPointer (channel);
@@ -32,7 +36,9 @@ public:
             }
         }
         _ms = _ms / static_cast<FloatType> (buffer.getNumSamples());
-        ms.push_back (_ms);
+        if (_ms > gate) {
+            ms.push_back (_ms);
+        }
     }
 
 private:

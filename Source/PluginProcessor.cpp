@@ -61,7 +61,9 @@ void PluginProcessor::changeProgramName (int index, const juce::String& newName)
 
 //==============================================================================
 void PluginProcessor::prepareToPlay (double sampleRate, int samplesPerBlock) {
-    juce::ignoreUnused (sampleRate, samplesPerBlock);
+    auto channels = static_cast<juce::uint32> (juce::jmin(getMainBusNumInputChannels(), getMainBusNumOutputChannels()));
+    juce::dsp::ProcessSpec spec{sampleRate, static_cast<juce::uint32> (samplesPerBlock), channels};
+    controller.prepare(spec);
 }
 
 void PluginProcessor::releaseResources() {

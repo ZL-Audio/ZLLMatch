@@ -82,6 +82,11 @@ set(SourceFiles
         Source/DSP/RMSTracker.h
         Source/DSP/LUFSTracker.h
 
+        Source/DSP/LUFSMeter/Ebu128LoudnessMeter.h
+        Source/DSP/LUFSMeter/Ebu128LoudnessMeter.cpp
+        Source/DSP/LUFSMeter/filters/SecondOrderIIRFilter.h
+        Source/DSP/LUFSMeter/filters/SecondOrderIIRFilter.cpp
+
         Source/GUI/interface_defines.h
         Source/GUI/ButtonComponent.h
         Source/GUI/ButtonLookAndFeel.h

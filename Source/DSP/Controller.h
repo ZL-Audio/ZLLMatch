@@ -17,6 +17,11 @@ public:
         reset();
     }
 
+    void prepare(const juce::dsp::ProcessSpec &spec) {
+        mainMonitor.prepare(spec);
+        targetMonitor.prepare(spec);
+    }
+
     void reset() {
         matcher.reset();
         mainMonitor.reset();
@@ -31,9 +36,9 @@ public:
             toReset = false;
         }
         if (modeID == ZLDsp::mode::learn) {
-            mainMonitor.process (m_processor->getBusBuffer (buffer, true, 0));
+            mainMonitor.process (m_processor->getBusBuffer (buffer, true, 0), gate.load());
             if (sideID == 1) {
-                targetMonitor.process (m_processor->getBusBuffer (buffer, true, 1));
+                targetMonitor.process (m_processor->getBusBuffer (buffer, true, 1), gate.load());
             }
             if (periodID == ZLDsp::period::whole) {
                 return;
@@ -107,6 +112,8 @@ public:
 
     void setLoudnessID (int ID) {
         loudnessID = ID;
+        mainMonitor.setLoudnessID(ID);
+        targetMonitor.setLoudnessID(ID);
     }
 
     void setPeriodID (int ID) {
