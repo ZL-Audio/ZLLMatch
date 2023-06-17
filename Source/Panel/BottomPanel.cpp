@@ -43,16 +43,16 @@ void BottomPanel::setFontSize (float size) {
 
 void BottomPanel::setMode (int modeID) {
     if (modeID == ZLDsp::mode::learn) {
-        boundSlider->setEnabled (true);
-        gateSlider->setEnabled (true);
-        targetSlider->setEnabled (true);
+        boundSlider->setEditable (true);
+        gateSlider->setEditable (true);
+        targetSlider->setEditable (true);
     } else if (modeID == ZLDsp::mode::effect) {
-        boundSlider->setEnabled (true);
-        gateSlider->setEnabled (false);
-        targetSlider->setEnabled (false);
+        boundSlider->setEditable (true);
+        gateSlider->setEditable (false);
+        targetSlider->setEditable (false);
     } else if (modeID == ZLDsp::mode::envelope) {
-        boundSlider->setEnabled (false);
-        gateSlider->setEnabled (false);
-        targetSlider->setEnabled (false);
+        boundSlider->setEditable(false);
+        gateSlider->setEditable (false);
+        targetSlider->setEditable (false);
     }
 }

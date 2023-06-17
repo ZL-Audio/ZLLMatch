@@ -18,7 +18,7 @@ public:
         // draw button
         ZLInterface::fillRoundedRectangle (g, bounds, fontSize * 0.5f);
         // draw ON/OFF
-        if (button.isEnabled()) {
+        if (editable.load()) {
             g.setColour (ZLInterface::TextColor);
         } else {
             g.setColour (ZLInterface::TextInactiveColor);
@@ -32,12 +32,12 @@ public:
             g.drawSingleLineText (juce::String ("ON"),
                 juce::roundToInt (bounds.getCentre().x + bounds.getWidth() * 0.22 + g.getCurrentFont().getHorizontalScale() * 0.5f),
                 juce::roundToInt (bounds.getCentre().y + g.getCurrentFont().getDescent()),
-                juce::Justification::centred);
+                juce::Justification::horizontallyCentred);
         } else {
             g.drawSingleLineText (juce::String ("OFF"),
                 juce::roundToInt (bounds.getCentre().x - bounds.getWidth() * 0.22 + g.getCurrentFont().getHorizontalScale() * 0.5f),
                 juce::roundToInt (bounds.getCentre().y + g.getCurrentFont().getDescent()),
-                juce::Justification::centred);
+                juce::Justification::horizontallyCentred);
         }
         g.setColour (ZLInterface::TextHideColor);
         if (shouldDrawButtonAsHighlighted) {
@@ -45,12 +45,12 @@ public:
                 g.drawSingleLineText (juce::String ("ON"),
                     juce::roundToInt (bounds.getCentre().x + bounds.getWidth() * 0.22 + g.getCurrentFont().getHorizontalScale() * 0.5f),
                     juce::roundToInt (bounds.getCentre().y + g.getCurrentFont().getDescent()),
-                    juce::Justification::centred);
+                    juce::Justification::horizontallyCentred);
             } else {
                 g.drawSingleLineText (juce::String ("OFF"),
                     juce::roundToInt (bounds.getCentre().x - bounds.getWidth() * 0.22 + g.getCurrentFont().getHorizontalScale() * 0.5f),
                     juce::roundToInt (bounds.getCentre().y + g.getCurrentFont().getDescent()),
-                    juce::Justification::centred);
+                    juce::Justification::horizontallyCentred);
             }
         }
     }
@@ -59,8 +59,13 @@ public:
         fontSize = size;
     }
 
+    void setEditable(bool f) {
+        editable.store(f);
+    }
+
 private:
     std::atomic<float> fontSize = 0.0f;
+    std::atomic<bool> editable = true;
 };
 
 #endif //ZLINFLATOR_BUTTONLOOKANDFEEL_H

@@ -17,6 +17,7 @@ public:
 
     ~ChangingValueComponent() override {
         stopTimer();
+        label.setLookAndFeel(nullptr);
     }
 
     void resized() override {

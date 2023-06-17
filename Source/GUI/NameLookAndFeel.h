@@ -8,7 +8,7 @@ class NameLookAndFeel : public juce::LookAndFeel_V4 {
 public:
     void drawLabel (juce::Graphics& g, juce::Label& label) override {
         g.fillAll (ZLInterface::BackgroundColor);
-        if (label.isEnabled()) {
+        if (editable) {
             g.setColour (ZLInterface::TextColor);
         } else {
             g.setColour (ZLInterface::TextInactiveColor);
@@ -24,13 +24,18 @@ public:
             juce::String (label.getText()),
             juce::roundToInt (center.x + g.getCurrentFont().getHorizontalScale()),
             juce::roundToInt (center.y + g.getCurrentFont().getDescent()),
-            juce::Justification::centred);
+            juce::Justification::horizontallyCentred);
     }
 
     void setFontSize (float size) { fontSize = size; }
 
+    void setEditable (bool f) {
+        editable.store (f);
+    }
+
 private:
     std::atomic<float> fontSize = 0.0f;
+    std::atomic<bool> editable = true;
 };
 
 #endif // ZLINFLATOR_NAMELOOKANDFEEL_H

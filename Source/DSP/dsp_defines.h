@@ -130,6 +130,25 @@ namespace ZLDsp {
         };
     };
 
+    static juce::AudioProcessorValueTreeState::ParameterLayout getParameterLayout() {
+        juce::AudioProcessorValueTreeState::ParameterLayout layout;
+        layout.add (strength::get(), gate::get(), target::get(), gain::get(), bound::get(), ceil::get(), mode::get(), period::get(), loudness::get(), side::get());
+        return layout;
+    }
+
+    static juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout {
+        strength::get(),
+        gate::get(),
+        target::get(),
+        gain::get(),
+        bound::get(),
+        ceil::get(),
+        mode::get(),
+        period::get(),
+        loudness::get(),
+        side::get()
+    };
+
     template <typename T, size_t elementSize>
     juce::String VectorToBase64String (const T& vec) {
         juce::MemoryBlock mb (vec.data(), vec.size() * elementSize);

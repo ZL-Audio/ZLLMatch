@@ -18,6 +18,12 @@ public:
         addAndMakeVisible (label);
     }
 
+    ~ButtonComponent() override {
+        setLookAndFeel(nullptr);
+        button.setLookAndFeel (nullptr);
+        label.setLookAndFeel (nullptr);
+    }
+
     void resized() override {
         auto bounds = getLocalBounds();
         bounds.removeFromTop (int (0.1 * bounds.getHeight()));
@@ -38,9 +44,10 @@ public:
         nameLookAndFeel.setFontSize (size);
     }
 
-    void setEnabled (bool shouldBeEnabled) {
-        button.setEnabled (shouldBeEnabled);
-        label.setEnabled (shouldBeEnabled);
+    void setEditable (bool f) {
+        myLookAndFeel.setEditable(f);
+        nameLookAndFeel.setEditable(f);
+        repaint();
     }
 
 private:

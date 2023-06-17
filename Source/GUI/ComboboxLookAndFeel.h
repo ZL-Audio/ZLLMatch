@@ -28,7 +28,7 @@ public:
     }
 
     void drawLabel (juce::Graphics& g, juce::Label& label) override {
-        if (editable) {
+        if (editable.load()) {
             g.setColour (ZLInterface::TextColor);
         } else {
             g.setColour (ZLInterface::TextInactiveColor);
@@ -43,7 +43,7 @@ public:
         g.drawSingleLineText (juce::String (label.getText()),
             juce::roundToInt (center.x + g.getCurrentFont().getHorizontalScale()),
             juce::roundToInt (center.y + g.getCurrentFont().getDescent()),
-            juce::Justification::centred);
+            juce::Justification::horizontallyCentred);
     }
 
     void drawPopupMenuBackground (juce::Graphics& g, int width, int height) override {
@@ -88,7 +88,7 @@ public:
     }
 
     void setEditable (bool f) {
-        editable = f;
+        editable.store(f);
     }
 
 private:

@@ -23,6 +23,11 @@ public:
         addAndMakeVisible (label);
     }
 
+    ~RotarySliderComponent() override  {
+        slider.setLookAndFeel(nullptr);
+        label.setLookAndFeel(nullptr);
+    }
+
     void resized() override {
         auto bound = getLocalBounds().toFloat();
         auto boundMinWH = juce::jmin (bound.getWidth(), bound.getHeight() - fontSize * ZLInterface::FontHuge);
@@ -49,9 +54,10 @@ public:
         nameLookAndFeel.setFontSize (size);
     }
 
-    void setEnabled (bool shouldBeEnabled) {
-        slider.setEnabled (shouldBeEnabled);
-        label.setEnabled (shouldBeEnabled);
+    void setEditable (bool f) {
+        myLookAndFeel.setEditable(f);
+        nameLookAndFeel.setEditable(f);
+        repaint();
     }
 
 private:

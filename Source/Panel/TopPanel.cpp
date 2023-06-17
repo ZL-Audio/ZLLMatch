@@ -44,12 +44,12 @@ void TopPanel::setFontSize (float size) {
 
 void TopPanel::setMode (int modeID) {
     if (modeID == ZLDsp::mode::learn) {
-        loudnessBox->setEnabled (true);
-        periodBox->setEnabled (true);
-        sideBox->setEnabled (true);
+        loudnessBox->setEditable (true);
+        periodBox->setEditable (true);
+        sideBox->setEditable (true);
     } else {
-        loudnessBox->setEnabled (false);
-        periodBox->setEnabled (false);
-        sideBox->setEnabled (false);
+        loudnessBox->setEditable (false);
+        periodBox->setEditable (false);
+        sideBox->setEditable (false);
     }
 }

@@ -50,8 +50,8 @@ void MidPanel::setFontSize (float size) {
 
 void MidPanel::setMode(int modeID) {
     if (modeID == ZLDsp::mode::envelope) {
-        ceilButton->setEnabled(false);
+        ceilButton->setEditable(false);
     } else {
-        ceilButton->setEnabled(true);
+        ceilButton->setEditable(true);
     }
 }

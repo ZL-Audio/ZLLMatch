@@ -7,12 +7,11 @@ PluginProcessor::PluginProcessor()
                           .withInput ("Input", juce::AudioChannelSet::stereo(), true)
                           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                           .withInput ("Target", juce::AudioChannelSet::stereo(), true)),
-      parameters (*this, nullptr, juce::Identifier ("ZLLMatchParameters"), {}),
+      parameters (*this, nullptr, juce::Identifier ("ZLLMatchParameters"), ZLDsp::getParameterLayout()),
       controller (this, parameters),
       controllerAttach (controller, parameters) {
     parameters.state.addChild (
         { "uiState", { { "width", ZLInterface::WindowWidth }, { "height", ZLInterface::WindowHeight } }, {} }, -1, nullptr);
-    controllerAttach.addParameters();
 }
 
 PluginProcessor::~PluginProcessor() = default;
@@ -112,13 +111,19 @@ void PluginProcessor::getStateInformation (juce::MemoryBlock& destData) {
 }
 
 void PluginProcessor::setStateInformation (const void* data, int sizeInBytes) {
-    std::unique_ptr<juce::XmlElement> xmlState (
-        getXmlFromBinary (data, sizeInBytes));
+    std::unique_ptr<juce::XmlElement> xmlState (getXmlFromBinary (data, sizeInBytes));
 
     if (xmlState != nullptr) {
         if (xmlState->hasTagName (parameters.state.getType())) {
-            parameters.replaceState (juce::ValueTree::fromXml (*xmlState));
-            controller.fromString (xmlState->getChildByName ("conState")->getStringAttribute ("diffs", ""));
+            auto state = juce::ValueTree::fromXml (*xmlState);
+            auto diffs = state.getChildWithName ("conState");
+            if (diffs.isValid()) {
+                state.removeChild(diffs, nullptr);
+                if (diffs.hasProperty ("diffs")) {
+                    controller.fromString (diffs.getProperty ("diffs"));
+                }
+            }
+            parameters.replaceState (state);
         }
     }
 }

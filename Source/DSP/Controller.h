@@ -168,6 +168,7 @@ public:
     explicit ControllerAttach (Controller<FloatType>& gainController, juce::AudioProcessorValueTreeState& parameters) {
         controller = &gainController;
         apvts = &parameters;
+        addListeners();
     }
 
     ~ControllerAttach() override {
@@ -182,22 +183,8 @@ public:
         }
     }
 
-    void addParameters() {
+    void addListeners() {
         std::array IDs { ZLDsp::loudness::ID, ZLDsp::period::ID, ZLDsp::side::ID, ZLDsp::mode::ID, ZLDsp::ceil::ID, ZLDsp::strength::ID, ZLDsp::gate::ID, ZLDsp::target::ID, ZLDsp::bound::ID, ZLDsp::gain::ID };
-
-        apvts->createAndAddParameter (ZLDsp::loudness::get());
-        apvts->createAndAddParameter (ZLDsp::period::get());
-        apvts->createAndAddParameter (ZLDsp::side::get());
-        apvts->createAndAddParameter (ZLDsp::mode::get());
-
-        apvts->createAndAddParameter (ZLDsp::ceil::get());
-
-        apvts->createAndAddParameter (ZLDsp::strength::get());
-        apvts->createAndAddParameter (ZLDsp::gate::get());
-        apvts->createAndAddParameter (ZLDsp::target::get());
-        apvts->createAndAddParameter (ZLDsp::bound::get());
-        apvts->createAndAddParameter (ZLDsp::gain::get());
-
         for (auto& ID : IDs) {
             apvts->addParameterListener (ID, this);
         }

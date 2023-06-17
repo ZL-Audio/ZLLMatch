@@ -3,7 +3,7 @@
 
 //==============================================================================
 PluginEditor::PluginEditor (PluginProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p), mainPanel (p.parameters, p.getController()) {
+    : AudioProcessorEditor (&p), processorRef (p), mainPanel (p.parameters, p.getController()), mainPanelAttach (mainPanel, p.parameters) {
     // set font
     auto sourceCodePro = juce::Typeface::createSystemTypefaceFor (BinaryData::OpenSansSemiBold_ttf,
         BinaryData::OpenSansSemiBold_ttfSize);
@@ -23,12 +23,11 @@ PluginEditor::PluginEditor (PluginProcessor& p)
     lastUIHeight.addListener (this);
 }
 
-PluginEditor::~PluginEditor() {
-}
+PluginEditor::~PluginEditor() = default;
 
 //==============================================================================
 void PluginEditor::paint (juce::Graphics& g) {
-    juce::ignoreUnused(g);
+    juce::ignoreUnused (g);
 }
 
 void PluginEditor::resized() {

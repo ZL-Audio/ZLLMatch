@@ -19,6 +19,7 @@ private:
     // access the processor object that created it.
     PluginProcessor& processorRef;
     MainPanel mainPanel;
+    MainPanelAttach mainPanelAttach;
     juce::Value lastUIWidth, lastUIHeight;
 
     void valueChanged (juce::Value&) override;
