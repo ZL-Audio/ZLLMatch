@@ -47,6 +47,10 @@ void TopPanel::setMode (int modeID) {
         loudnessBox->setEditable (true);
         periodBox->setEditable (true);
         sideBox->setEditable (true);
+    } else if (modeID == ZLDsp::mode::effect){
+        loudnessBox->setEditable (true);
+        periodBox->setEditable (false);
+        sideBox->setEditable (true);
     } else {
         loudnessBox->setEditable (false);
         periodBox->setEditable (false);

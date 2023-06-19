@@ -49,7 +49,7 @@ void BottomPanel::setMode (int modeID) {
     } else if (modeID == ZLDsp::mode::effect) {
         boundSlider->setEditable (true);
         gateSlider->setEditable (false);
-        targetSlider->setEditable (false);
+        targetSlider->setEditable (true);
     } else if (modeID == ZLDsp::mode::envelope) {
         boundSlider->setEditable(false);
         gateSlider->setEditable (false);

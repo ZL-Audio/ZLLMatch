@@ -4,12 +4,13 @@
 #include <juce_audio_processors/juce_audio_processors.h>
 
 namespace ZLDsp {
-    // floats
-    template <class T>
+// floats
+    template<class T>
     class FloatParameters {
     public:
         static std::unique_ptr<juce::AudioParameterFloat> get() {
-            return std::make_unique<juce::AudioParameterFloat> (T::ID, T::name, T::range, T::defaultV);
+            return std::make_unique<juce::AudioParameterFloat>(T::ID, T::name, T::range,
+                                                               T::defaultV);
         }
     };
 
@@ -17,18 +18,19 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "strength";
         auto static constexpr name = "Strength (%)";
-        inline auto static const range = juce::NormalisableRange<float> (0.0f, 100.0f, 1.f);
+        inline auto static const range =
+                juce::NormalisableRange<float>(0.0f, 100.0f, 1.f);
         auto static constexpr defaultV = 100.0f;
-        static float formatV (float v) {
-            return v / 100.f;
-        }
+
+        static float formatV(float v) { return v / 100.f; }
     };
 
     class gate : public FloatParameters<gate> {
     public:
         auto static constexpr ID = "gate";
         auto static constexpr name = "Gate (dB)";
-        inline auto static const range = juce::NormalisableRange<float> (-110.f, -10.f, 0.1f);
+        inline auto static const range =
+                juce::NormalisableRange<float>(-110.f, -10.f, 0.1f);
         auto static constexpr defaultV = -60.f;
     };
 
@@ -36,7 +38,8 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "target";
         auto static constexpr name = "Target (dB)";
-        inline auto static const range = juce::NormalisableRange<float> (-30.f, -6.f, 0.1f);
+        inline auto static const range =
+                juce::NormalisableRange<float>(-30.f, -6.f, 0.1f);
         auto static constexpr defaultV = -18.f;
     };
 
@@ -44,7 +47,8 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "gain";
         auto static constexpr name = "Gain (dB)";
-        inline auto static const range = juce::NormalisableRange<float> (-30., 30.f, 0.01f);
+        inline auto static const range =
+                juce::NormalisableRange<float>(-30., 30.f, 0.01f);
         auto static constexpr defaultV = 0.f;
     };
 
@@ -52,16 +56,18 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "bound";
         auto static constexpr name = "Bound (dB)";
-        inline auto static const range = juce::NormalisableRange<float> (0., 30.f, 0.1f);
+        inline auto static const range =
+                juce::NormalisableRange<float>(0., 30.f, 0.1f);
         auto static constexpr defaultV = 30.f;
     };
 
-    // bools
-    template <class T>
+// bools
+    template<class T>
     class BoolParameters {
     public:
         static std::unique_ptr<juce::AudioParameterBool> get() {
-            return std::make_unique<juce::AudioParameterBool> (T::ID, T::name, T::defaultV);
+            return std::make_unique<juce::AudioParameterBool>(T::ID, T::name,
+                                                              T::defaultV);
         }
     };
 
@@ -72,12 +78,13 @@ namespace ZLDsp {
         auto static constexpr defaultV = false;
     };
 
-    // choices
-    template <class T>
+// choices
+    template<class T>
     class ChoiceParameters {
     public:
         static std::unique_ptr<juce::AudioParameterChoice> get() {
-            return std::make_unique<juce::AudioParameterChoice> (T::ID, T::name, T::choices, T::defaultI);
+            return std::make_unique<juce::AudioParameterChoice>(
+                    T::ID, T::name, T::choices, T::defaultI);
         }
     };
 
@@ -85,12 +92,11 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "mode";
         auto static constexpr name = "Mode";
-        inline auto static const choices = juce::StringArray { "Learn", "Effect", "Envelope" };
+        inline auto static const choices =
+                juce::StringArray{"Learn", "Effect", "Envelope"};
         int static constexpr defaultI = 1;
         enum {
-            learn,
-            effect,
-            envelope
+            learn, effect, envelope
         };
     };
 
@@ -98,23 +104,25 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "measurement";
         auto static constexpr name = "Measurement";
-        inline auto static const choices = juce::StringArray { "RMS", "LUFS" };
+        inline auto static const choices = juce::StringArray{"RMS", "LUFS"};
         int static constexpr defaultI = 0;
         enum {
-            rms,
-            lufs
+            rms, lufs, loudnessNUM
         };
+        template<typename FloatType>
+        static std::vector<FloatType> getEmptyLoudness() {
+            return std::vector<FloatType>(loudnessNUM, -180);
+        }
     };
 
     class period : public ChoiceParameters<period> {
     public:
         auto static constexpr ID = "period";
         auto static constexpr name = "Period";
-        inline auto static const choices = juce::StringArray { "Whole", "Segment" };
+        inline auto static const choices = juce::StringArray{"Whole", "Segment"};
         int static constexpr defaultI = 0;
         enum {
-            whole,
-            segment
+            whole, segment
         };
     };
 
@@ -122,61 +130,53 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "side";
         auto static constexpr name = "Side";
-        inline auto static const choices = juce::StringArray { "Value", "Aux" };
+        inline auto static const choices = juce::StringArray{"Value", "Aux"};
         int static constexpr defaultI = 0;
         enum {
-            value,
-            aux
+            value, aux
         };
     };
 
-    static juce::AudioProcessorValueTreeState::ParameterLayout getParameterLayout() {
+    static juce::AudioProcessorValueTreeState::ParameterLayout
+    getParameterLayout() {
         juce::AudioProcessorValueTreeState::ParameterLayout layout;
-        layout.add (strength::get(), gate::get(), target::get(), gain::get(), bound::get(), ceil::get(), mode::get(), period::get(), loudness::get(), side::get());
+        layout.add(strength::get(), gate::get(), target::get(), gain::get(),
+                   bound::get(), ceil::get(), mode::get(), period::get(),
+                   loudness::get(), side::get());
         return layout;
     }
 
-    static juce::AudioProcessorValueTreeState::ParameterLayout parameterLayout {
-        strength::get(),
-        gate::get(),
-        target::get(),
-        gain::get(),
-        bound::get(),
-        ceil::get(),
-        mode::get(),
-        period::get(),
-        loudness::get(),
-        side::get()
-    };
-
-    template <typename T, size_t elementSize>
-    juce::String VectorToBase64String (const T& vec) {
-        juce::MemoryBlock mb (vec.data(), vec.size() * elementSize);
+    template<typename T, size_t elementSize>
+    juce::String VectorToBase64String(const T &vec) {
+        juce::MemoryBlock mb(vec.data(), vec.size() * elementSize);
         return mb.toBase64Encoding();
     }
 
-    template <typename T>
-    juce::String VectorToBase64String (const std::vector<T>& vec) {
-        return VectorToBase64String<std::vector<T>, sizeof (T)> (vec);
+    template<typename T>
+    juce::String VectorToBase64String(const std::vector<T> &vec) {
+        return VectorToBase64String<std::vector<T>, sizeof(T)>(vec);
     }
 
-    template <typename T>
-    std::vector<T> Base64StringToVector (const juce::String& str) {
+    template<typename T>
+    std::vector<T> Base64StringToVector(const juce::String &str) {
         juce::MemoryBlock mb;
-        if (mb.fromBase64Encoding (str)) {
-            juce::Array<T> arr (static_cast<T*> (mb.getData()),
-                static_cast<int> (mb.getSize() / sizeof (T)));
+        if (mb.fromBase64Encoding(str)) {
+            juce::Array <T> arr(static_cast<T *>(mb.getData()),
+                                static_cast<int>(mb.getSize() / sizeof(T)));
             std::vector<T> vec;
-            vec.resize (static_cast<size_t> (arr.size()));
-            for (size_t i = 0; i < vec.size(); ++i) {
-                vec[i] = arr[static_cast<int> (i)];
+//            vec.resize(static_cast<size_t>(arr.size()));
+            for (auto& a: arr) {
+                vec.push_back(a);
             }
+//            for (size_t i = 0; i < vec.size(); ++i) {
+//                vec[i] = arr[static_cast<int>(i)];
+//            }
             return vec;
         }
 
         jassertfalse;
         return {};
     }
-}
+} // namespace ZLDsp
 
-#endif //ZLLMATCH_DSP_DEFINES_H
+#endif // ZLLMATCH_DSP_DEFINES_H

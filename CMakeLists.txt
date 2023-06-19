@@ -79,8 +79,9 @@ set(SourceFiles
         Source/DSP/Controller.h
         Source/DSP/Matcher.h
         Source/DSP/Monitor.h
-        Source/DSP/RMSTracker.h
-        Source/DSP/LUFSTracker.h
+        Source/DSP/Tracker/Tracker.h
+        Source/DSP/Tracker/RMSTracker.h
+        Source/DSP/Tracker/LUFSTracker.h
 
         Source/DSP/LUFSMeter/Ebu128LoudnessMeter.h
         Source/DSP/LUFSMeter/Ebu128LoudnessMeter.cpp

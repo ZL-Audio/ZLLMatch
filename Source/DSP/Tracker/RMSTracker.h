@@ -1,33 +1,33 @@
 #ifndef ZLLMATCH_RMSTRACKER_H
 #define ZLLMATCH_RMSTRACKER_H
 
-#include "dsp_defines.h"
 #include "juce_audio_processors/juce_audio_processors.h"
 #include "juce_dsp/juce_dsp.h"
 
-template <typename FloatType>
-class RMSTracker {
-public:
-    RMSTracker() = default;
+#include "../dsp_defines.h"
+#include "Tracker.h"
 
-    ~RMSTracker() {
+template <typename FloatType>
+class RMSTracker : public Tracker<FloatType> {
+public:
+    ~RMSTracker() override {
         reset();
     }
 
-    void prepare(const juce::dsp::ProcessSpec &spec) {
-        juce::ignoreUnused(spec);
+    void prepare (const juce::dsp::ProcessSpec& spec) override {
+        juce::ignoreUnused (spec);
     }
 
-    void reset() {
+    void reset() override {
         ms.clear();
     }
 
-    FloatType getIntegratedLoudness() {
+    FloatType getIntegratedLoudness() override {
         auto meanSquare = std::reduce (ms.begin(), ms.end()) / static_cast<FloatType> (ms.size());
         return juce::Decibels::gainToDecibels (std::sqrt (meanSquare));
     }
 
-    void process (const juce::AudioBuffer<float>& buffer, FloatType gate) {
+    void process (const juce::AudioBuffer<float>& buffer, FloatType gate) override {
         FloatType _ms = 0;
         for (auto channel = 0; channel < buffer.getNumChannels(); channel++) {
             auto data = buffer.getReadPointer (channel);

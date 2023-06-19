@@ -1,62 +1,58 @@
 #ifndef ZLLMATCH_MONITOR_H
 #define ZLLMATCH_MONITOR_H
 
-#include "LUFSTracker.h"
-#include "RMSTracker.h"
+#include "Tracker//Tracker.h"
+#include "Tracker/LUFSTracker.h"
+#include "Tracker/RMSTracker.h"
 #include "juce_audio_processors/juce_audio_processors.h"
 #include "juce_dsp/juce_dsp.h"
 
-template <typename FloatType>
+template<typename FloatType>
 class Monitor {
 public:
     Monitor() = default;
 
-    void prepare (const juce::dsp::ProcessSpec& spec) {
-        rmsTracker.prepare (spec);
-        lufsTracker.prepare (spec);
+    void prepare(const juce::dsp::ProcessSpec &spec) {
+        for (auto &t: trackers) {
+            t->prepare(spec);
+        }
     }
 
     void reset() {
         peak = 0;
         bPeak = 0;
-        rmsTracker.reset();
-        lufsTracker.reset();
-    }
-
-    void process (const juce::AudioBuffer<float>& buffer, FloatType gate) {
-        bPeak = buffer.getMagnitude (0, buffer.getNumSamples());
-        peak = juce::jmax (bPeak, peak);
-        rmsTracker.process (buffer, juce::Decibels::decibelsToGain (gate));
-        lufsTracker.process (buffer, juce::Decibels::decibelsToGain (gate));
-    }
-
-    FloatType getLoudness() {
-        if (loudnessID.load() == ZLDsp::loudness::rms) {
-            return rmsTracker.getIntegratedLoudness();
-        } else if (loudnessID.load() == ZLDsp::loudness::lufs) {
-            return lufsTracker.getIntegratedLoudness();
-        } else {
-            return static_cast<FloatType> (0);
+        for (auto &t: trackers) {
+            t->reset();
         }
     }
 
-    FloatType getBufferPeak() {
-        return juce::Decibels::gainToDecibels (bPeak);
+    void process(const juce::AudioBuffer<float> &buffer, FloatType gate) {
+        bPeak = buffer.getMagnitude(0, buffer.getNumSamples());
+        peak = juce::jmax(bPeak, peak);
+        for (auto &t: trackers) {
+            t->process(buffer, juce::Decibels::decibelsToGain(gate));
+        }
     }
 
-    FloatType getPeak() {
-        return juce::Decibels::gainToDecibels (peak);
+    std::vector<FloatType> getLoudness() {
+
+        std::vector<FloatType> loudness;
+        for (auto &t: trackers) {
+            loudness.push_back(t->getIntegratedLoudness());
+        }
+        return loudness;
     }
 
-    void setLoudnessID (int ID) {
-        loudnessID = ID;
-    }
+    FloatType getBufferPeak() { return juce::Decibels::gainToDecibels(bPeak); }
+
+    FloatType getPeak() { return juce::Decibels::gainToDecibels(peak); }
 
 private:
     FloatType peak = 0, bPeak = 0;
-    std::atomic<int> loudnessID = ZLDsp::loudness::defaultI;
-    RMSTracker<FloatType> rmsTracker;
-    LUFSTracker<FloatType> lufsTracker;
+    std::array<std::unique_ptr<Tracker<FloatType>>, ZLDsp::loudness::loudnessNUM> trackers{
+            std::make_unique<RMSTracker<FloatType>>(),
+            std::make_unique<LUFSTracker<FloatType>>(),
+    };
 };
 
 #endif //ZLLMATCH_MONITOR_H

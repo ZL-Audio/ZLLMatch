@@ -6,7 +6,7 @@ PluginProcessor::PluginProcessor()
     : AudioProcessor (BusesProperties()
                           .withInput ("Input", juce::AudioChannelSet::stereo(), true)
                           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
-                          .withInput ("Target", juce::AudioChannelSet::stereo(), true)),
+                          .withInput ("Aux", juce::AudioChannelSet::stereo(), true)),
       parameters (*this, nullptr, juce::Identifier ("ZLLMatchParameters"), ZLDsp::getParameterLayout()),
       controller (this, parameters),
       controllerAttach (controller, parameters) {
@@ -106,6 +106,8 @@ void PluginProcessor::getStateInformation (juce::MemoryBlock& destData) {
     auto state = parameters.copyState();
     auto conState = state.getOrCreateChildWithName ("conState", nullptr);
     conState.setProperty ("diffs", controller.toString(), nullptr);
+    auto version = state.getOrCreateChildWithName ("version", nullptr);
+    version.setProperty ("string", JucePlugin_VersionString, nullptr);
     std::unique_ptr<juce::XmlElement> xml (state.createXml());
     copyXmlToBinary (*xml, destData);
 }
@@ -117,10 +119,12 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes) {
         if (xmlState->hasTagName (parameters.state.getType())) {
             auto state = juce::ValueTree::fromXml (*xmlState);
             auto diffs = state.getChildWithName ("conState");
-            if (diffs.isValid()) {
-                state.removeChild(diffs, nullptr);
-                if (diffs.hasProperty ("diffs")) {
-                    controller.fromString (diffs.getProperty ("diffs"));
+            auto version = state.getChildWithName ("version");
+            if (diffs.isValid() && version.isValid()) {
+                state.removeChild (diffs, nullptr);
+                state.removeChild (version, nullptr);
+                if (version.getProperty ("string", "") == JucePlugin_VersionString) {
+                    controller.fromString (diffs.getProperty ("diffs", ""));
                 }
             }
             parameters.replaceState (state);

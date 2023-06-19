@@ -36,10 +36,9 @@ public:
         panel = &mainPanel;
         apvts = &parameters;
         startTimerHz(ZLInterface::RefreshFreqHz);
-//        parameters.addParameterListener (ZLDsp::mode::ID, this);
     }
 
-    ~MainPanelAttach() {
+    ~MainPanelAttach() override {
         stopTimer();
     }
 
@@ -55,13 +54,6 @@ private:
     MainPanel* panel;
     juce::AudioProcessorValueTreeState* apvts;
     std::atomic<int> modeID = ZLDsp::mode::defaultI;
-
-//    void parameterChanged (const juce::String& parameterID, float newValue) override {
-//        if (parameterID == ZLDsp::mode::ID) {
-//            auto modeID = static_cast<int> (newValue);
-//            panel->setMode (modeID);
-//        }
-//    }
 };
 
 #endif //ZLLMATCH_MAINPANEL_H
