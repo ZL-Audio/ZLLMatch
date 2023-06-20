@@ -37,7 +37,7 @@ namespace ZLDsp {
     class target : public FloatParameters<target> {
     public:
         auto static constexpr ID = "target";
-        auto static constexpr name = "Target (dB)";
+        auto static constexpr name = "Target";
         inline auto static const range =
                 juce::NormalisableRange<float>(-30.f, -6.f, 0.1f);
         auto static constexpr defaultV = -18.f;
@@ -104,10 +104,10 @@ namespace ZLDsp {
     public:
         auto static constexpr ID = "measurement";
         auto static constexpr name = "Measurement";
-        inline auto static const choices = juce::StringArray{"RMS", "LUFS"};
+        inline auto static const choices = juce::StringArray{"RMS", "LUFS", "RMS-G"};
         int static constexpr defaultI = 0;
         enum {
-            rms, lufs, loudnessNUM
+            rms, lufs, rms_g, loudnessNUM
         };
         template<typename FloatType>
         static std::vector<FloatType> getEmptyLoudness() {

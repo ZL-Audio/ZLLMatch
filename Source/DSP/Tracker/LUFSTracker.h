@@ -8,15 +8,18 @@
 #include "../dsp_defines.h"
 #include "Tracker.h"
 
-template <typename FloatType>
+template<typename FloatType>
 class LUFSTracker : public Tracker<FloatType> {
 public:
     ~LUFSTracker() override {
         reset();
     }
 
-    void prepare (const juce::dsp::ProcessSpec& spec) override {
-        meter.prepareToPlay (spec.sampleRate, static_cast<int> (spec.numChannels), static_cast<int> (spec.sampleRate), 100);
+    void prepare(const juce::dsp::ProcessSpec &spec) override {
+        meter.prepareToPlay(spec.sampleRate,
+                            static_cast<int> (spec.numChannels),
+                            static_cast<int> (spec.sampleRate),
+                            100);
     }
 
     void reset() override {
@@ -27,9 +30,9 @@ public:
         return static_cast<FloatType> (meter.getIntegratedLoudness());
     }
 
-    void process (const juce::AudioBuffer<float>& buffer, FloatType gate) override {
-        juce::ignoreUnused (gate);
-        meter.processBlock (buffer);
+    void process(const juce::AudioBuffer<float> &buffer, FloatType gate) override {
+        juce::ignoreUnused(gate);
+        meter.processBlock(buffer);
     }
 
 private:

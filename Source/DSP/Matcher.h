@@ -56,8 +56,8 @@ public:
     }
 
     Translator<FloatType> toStruct() {
-        return Translator<FloatType>{{m_mainLoudness[0], m_mainLoudness[1]},
-                                     {m_targetLoudness[0], m_targetLoudness[1]},
+        return Translator<FloatType>{{m_mainLoudness[0], m_mainLoudness[1], m_mainLoudness[2]},
+                                     {m_targetLoudness[0], m_targetLoudness[1], m_mainLoudness[2]},
                                      m_peak, m_position};
     }
 

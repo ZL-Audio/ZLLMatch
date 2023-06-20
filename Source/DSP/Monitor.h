@@ -50,8 +50,9 @@ public:
 private:
     FloatType peak = 0, bPeak = 0;
     std::array<std::unique_ptr<Tracker<FloatType>>, ZLDsp::loudness::loudnessNUM> trackers{
-            std::make_unique<RMSTracker<FloatType>>(),
+            std::make_unique<RMSTracker<FloatType>>(false),
             std::make_unique<LUFSTracker<FloatType>>(),
+            std::make_unique<RMSTracker<FloatType>>(true),
     };
 };
 
