@@ -36,7 +36,7 @@ public:
             reset();
             toReset.store(false);
         }
-        if (modeID == ZLDsp::mode::learn) {
+        if (modeID == ZLDsp::mode::learn && m_processor->getPlayHead()->getPosition()->getIsPlaying()) {
             mainMonitor.process(m_processor->getBusBuffer(buffer, true, 0),
                                 gate.load());
             if (sideID == ZLDsp::side::aux && m_processor->getBusCount(true) >= 2) {
