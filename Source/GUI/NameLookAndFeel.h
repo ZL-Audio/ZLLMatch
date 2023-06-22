@@ -7,7 +7,6 @@
 class NameLookAndFeel : public juce::LookAndFeel_V4 {
 public:
     void drawLabel (juce::Graphics& g, juce::Label& label) override {
-        g.fillAll (ZLInterface::BackgroundColor);
         if (editable) {
             g.setColour (ZLInterface::TextColor);
         } else {

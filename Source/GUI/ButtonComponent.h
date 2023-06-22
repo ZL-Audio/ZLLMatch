@@ -58,7 +58,7 @@ private:
 
     constexpr static float buttonHeight = 0.7f;
     constexpr static float labelHeight = 1.f - buttonHeight;
-    constexpr static float buttonRatio = 0.4f;
+    constexpr static float buttonRatio = 0.45f;
 };
 
 #endif //ZLINFLATOR_BUTTONCOMPONENT_H

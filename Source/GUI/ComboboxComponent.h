@@ -28,7 +28,7 @@ public:
     void resized() override {
         auto bounds = getLocalBounds();
         bounds.removeFromTop (int (0.1 * bounds.getHeight()));
-        comboBox.setBounds (0, (int) (0.3f * (float) bounds.getHeight()), bounds.getWidth(), (int) ((float) bounds.getWidth() * 0.4f));
+        comboBox.setBounds (0, (int) (0.3f * (float) bounds.getHeight()), bounds.getWidth(), (int) ((float) bounds.getWidth() * 0.45f));
         label.setBoundsRelative (0.f, 0.0f, 1.f, 0.3f);
     }
 

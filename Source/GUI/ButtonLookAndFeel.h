@@ -12,11 +12,16 @@ public:
         juce::ignoreUnused (shouldDrawButtonAsDown);
         // draw background
         g.fillAll (ZLInterface::BackgroundColor);
+//        if (editable.load()) {
+//            g.fillAll(ZLInterface::BackgroundColor);
+//        } else {
+//            g.fillAll(ZLInterface::TextColor);
+//        }
         // calculate values
         auto bounds = button.getLocalBounds().toFloat();
-        bounds = bounds.withSizeKeepingCentre (bounds.getWidth() * 0.8f, bounds.getHeight() * 0.6f);
+//        bounds = bounds.withSizeKeepingCentre (bounds.getWidth() * 0.8f, bounds.getHeight() * 0.6f);
         // draw button
-        ZLInterface::fillRoundedRectangle (g, bounds, fontSize * 0.5f);
+        bounds = ZLInterface::fillRoundedRectangle (g, bounds, fontSize * 0.5f);
         // draw ON/OFF
         if (editable.load()) {
             g.setColour (ZLInterface::TextColor);

@@ -35,14 +35,12 @@ public:
         auto textBound = bound.removeFromTop (fontSize * ZLInterface::FontHuge);
         label.setBounds (textBound.toNearestInt());
         auto bounds = bound;
-        auto radius = juce::jmin (sliderHeight * bounds.getWidth(), sliderHeight * bounds.getHeight());
+        auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight());
         auto buttonBounds = bounds.withSizeKeepingCentre (radius, radius);
         slider.setBounds (buttonBounds.toNearestInt());
     }
 
-    void paint (juce::Graphics& g) override {
-        g.fillAll (ZLInterface::BackgroundColor);
-    }
+    void paint (juce::Graphics& g) override {}
 
     juce::Slider& getSlider() { return slider; }
 

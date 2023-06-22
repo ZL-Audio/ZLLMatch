@@ -16,12 +16,12 @@ public:
         juce::ignoreUnused(isButtonDown);
         float cornerSize = fontSize * 0.5f;
         if (!box.isPopupActive()) {
-            auto boxBounds = juce::Rectangle<float>((float) width * 0.1f, (float) height * 0.2f, (float) width * 0.8f,
-                                                    (float) height * 0.6f);
+            auto boxBounds = juce::Rectangle<float>(0, (float) 0,
+                                                    (float) width, (float) height * 1.0f);
             ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize);
         } else {
-            auto boxBounds = juce::Rectangle<float>((float) width * 0.1f, (float) height * 0.2f, (float) width * 0.8f,
-                                                    (float) height * 0.8f);
+            auto boxBounds = juce::Rectangle<float>(0, 0,
+                                                    (float) width * 1.0f, (float) height + cornerSize * 2.f);
             ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize, true, true, false, false);
         }
     }
@@ -51,11 +51,11 @@ public:
 
     void drawPopupMenuBackground(juce::Graphics &g, int width, int height) override {
         float cornerSize = fontSize * 0.5f;
-        auto boxBounds = juce::Rectangle<float>((float) width * 0.1f, (float) height * 0.0f, (float) width * 0.8f,
-                                                (float) height - cornerSize);
-        ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize, false, false, true, true);
+        auto boxBounds = juce::Rectangle<float>(0, -2.f * cornerSize, (float) width,
+                                                (float) height + 2.f * cornerSize);
+        boxBounds = ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize, false, false, true, true);
         g.setColour(ZLInterface::TextInactiveColor);
-        g.fillRect(boxBounds.getX(), boxBounds.getY(), boxBounds.getWidth(), cornerSize * 0.15f);
+        g.fillRect(boxBounds.getX(), 0.0f, boxBounds.getWidth(), cornerSize * 0.15f);
     }
 
     void getIdealPopupMenuItemSize(const juce::String &text, const bool isSeparator, int standardMenuItemHeight,
@@ -65,11 +65,12 @@ public:
         idealHeight = int(fontSize * ZLInterface::FontLarge * 1.2f);
     }
 
-    void
-    drawPopupMenuItem(juce::Graphics &g, const juce::Rectangle<int> &area, const bool isSeparator, const bool isActive,
-                      const bool isHighlighted, const bool isTicked, const bool hasSubMenu, const juce::String &text,
-                      const juce::String &shortcutKeyText, const juce::Drawable *icon,
-                      const juce::Colour *const textColourToUse) override {
+    void drawPopupMenuItem(juce::Graphics &g, const juce::Rectangle<int> &area,
+                           const bool isSeparator, const bool isActive,
+                           const bool isHighlighted, const bool isTicked, const bool hasSubMenu,
+                           const juce::String &text,
+                           const juce::String &shortcutKeyText, const juce::Drawable *icon,
+                           const juce::Colour *const textColourToUse) override {
         juce::ignoreUnused(isSeparator, hasSubMenu, shortcutKeyText, icon, textColourToUse);
         if ((isHighlighted || isTicked) && isActive && editable) {
             g.setColour(ZLInterface::TextColor);
@@ -85,7 +86,7 @@ public:
         g.drawSingleLineText(
                 text,
                 juce::roundToInt(center.x + g.getCurrentFont().getHorizontalScale()),
-                juce::roundToInt(center.y + g.getCurrentFont().getDescent()),
+                juce::roundToInt(center.y),
                 juce::Justification::horizontallyCentred);
     }
 
@@ -94,7 +95,7 @@ public:
     }
 
     int getPopupMenuBorderSize() override {
-        return static_cast<int> (fontSize * 0.5f);
+        return juce::roundToInt(fontSize * 0.5f);
     }
 
     void setFontSize(float size) {

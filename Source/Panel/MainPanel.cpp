@@ -16,10 +16,10 @@ MainPanel::~MainPanel() = default;
 void MainPanel::paint (juce::Graphics& g) {
     g.fillAll (ZLInterface::BackgroundColor);
     auto bound = getLocalBounds().toFloat();
-    auto padding = bound.getHeight() * 0.057142857f;
-    bound = bound.withSizeKeepingCentre (bound.getWidth() - padding, bound.getHeight() - padding);
-    float cornerSize = bound.getHeight() * 0.034285714f;
-    ZLInterface::fillRoundedRectangle (g, bound, cornerSize);
+//    auto padding = bound.getHeight() * 0.057142857f;
+//    bound = bound.withSizeKeepingCentre (bound.getWidth() - padding, bound.getHeight() - padding);
+    float cornerSize = bound.getHeight() * 0.0514f;
+    ZLInterface::fillRoundedRectangle (g, bound, cornerSize * 0.5f);
 }
 
 void MainPanel::resized() {
