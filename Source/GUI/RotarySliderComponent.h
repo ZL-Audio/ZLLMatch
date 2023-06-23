@@ -35,7 +35,7 @@ public:
         auto textBound = bound.removeFromTop (fontSize * ZLInterface::FontHuge);
         label.setBounds (textBound.toNearestInt());
         auto bounds = bound;
-        auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight());
+        auto radius = juce::jmin (bounds.getWidth(), bounds.getHeight()) * 0.9f;
         auto buttonBounds = bounds.withSizeKeepingCentre (radius, radius);
         slider.setBounds (buttonBounds.toNearestInt());
     }

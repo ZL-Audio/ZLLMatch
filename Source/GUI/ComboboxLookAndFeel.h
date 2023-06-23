@@ -14,15 +14,21 @@ public:
     void drawComboBox(juce::Graphics &g, int width, int height, bool isButtonDown, int, int, int, int,
                       juce::ComboBox &box) override {
         juce::ignoreUnused(isButtonDown);
-        float cornerSize = fontSize * 0.5f;
+        auto cornerSize = fontSize * 0.5f;
+        auto blurRadius = fontSize * 0.15f;
         if (!box.isPopupActive()) {
             auto boxBounds = juce::Rectangle<float>(0, (float) 0,
                                                     (float) width, (float) height * 1.0f);
-            ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize);
+            boxBounds = ZLInterface::fillRoundedShadowRectangle(g, boxBounds, cornerSize);
+            ZLInterface::fillRoundedInnerShadowRectangle(g, boxBounds, cornerSize, blurRadius,
+                                                         true, true, true, true, true);
         } else {
             auto boxBounds = juce::Rectangle<float>(0, 0,
                                                     (float) width * 1.0f, (float) height + cornerSize * 2.f);
-            ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize, true, true, false, false);
+            boxBounds = ZLInterface::fillRoundedShadowRectangle(g, boxBounds, cornerSize, true, true, false, false);
+            ZLInterface::fillRoundedInnerShadowRectangle(g, boxBounds, cornerSize, blurRadius,
+                                                         true, true, true, true, true);
+
         }
     }
 
@@ -50,10 +56,13 @@ public:
     }
 
     void drawPopupMenuBackground(juce::Graphics &g, int width, int height) override {
-        float cornerSize = fontSize * 0.5f;
+        auto cornerSize = fontSize * 0.5f;
+        auto blurRadius = fontSize * 0.15f;
         auto boxBounds = juce::Rectangle<float>(0, -2.f * cornerSize, (float) width,
                                                 (float) height + 2.f * cornerSize);
-        boxBounds = ZLInterface::fillRoundedRectangle(g, boxBounds, cornerSize, false, false, true, true);
+        boxBounds = ZLInterface::fillRoundedShadowRectangle(g, boxBounds, cornerSize, false, false, true, true);
+        ZLInterface::fillRoundedInnerShadowRectangle(g, boxBounds, cornerSize, blurRadius,
+                                                     true, true, true, true, true);
         g.setColour(ZLInterface::TextInactiveColor);
         g.fillRect(boxBounds.getX(), 0.0f, boxBounds.getWidth(), cornerSize * 0.15f);
     }

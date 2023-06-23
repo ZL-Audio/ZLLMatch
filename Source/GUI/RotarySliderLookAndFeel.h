@@ -12,27 +12,34 @@ public:
                           const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider &slider) override {
         juce::ignoreUnused(slider);
         // calculate values
-        auto rotationAngle =
-                rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
+        auto rotationAngle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
         auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat();
         auto diameter = juce::jmin(bounds.getWidth(), bounds.getHeight());
         bounds = bounds.withSizeKeepingCentre(diameter, diameter);
         // draw knob
-        bounds = ZLInterface::drawEllipse(g, bounds, fontSize * 0.5f);
-        diameter = bounds.getWidth();
+        auto oldBounds = ZLInterface::drawInnerShadowEllipse(g, bounds, fontSize * 0.5f);
+        auto newBounds = ZLInterface::drawShadowEllipse(g, oldBounds, fontSize * 0.5f);
+        ZLInterface::drawInnerShadowEllipse(g, newBounds, fontSize * 0.15f, true);
         // draw arrow
-        juce::Path path;
-        float triangleUnit = diameter * 0.05f;
-        path.addTriangle(-1.15f * triangleUnit, triangleUnit, 1.15f * triangleUnit, triangleUnit, 0, -triangleUnit);
-        auto transform = juce::AffineTransform::translation(
-                -0.0f + bounds.getCentreX(), -0.5f * diameter + triangleUnit + bounds.getCentreY())
-                .rotated(rotationAngle, bounds.getCentreX(), bounds.getCentreY());
-        if (editable) {
-            g.setColour(ZLInterface::TextColor);
-        } else {
-            g.setColour(ZLInterface::TextInactiveColor);
-        }
-        g.fillPath(path, transform);
+        auto arrowUnit = (diameter - newBounds.getWidth()) * 0.5f;
+        auto arrowBound = juce::Rectangle<float>(
+                -0.5f * arrowUnit + bounds.getCentreX() +
+                (0.5f * diameter - 0.5f * arrowUnit) * std::sin(rotationAngle),
+                -0.5f * arrowUnit + bounds.getCentreY() +
+                (0.5f * diameter - 0.5f * arrowUnit) * (-std::cos(rotationAngle)),
+                arrowUnit, arrowUnit);
+        arrowBound = arrowBound.withSizeKeepingCentre(arrowBound.getWidth(), arrowBound.getHeight());
+        juce::Path mask;
+        mask.addEllipse(bounds);
+        mask.setUsingNonZeroWinding(false);
+        mask.addEllipse(newBounds);
+        g.saveState();
+        g.reduceClipRegion(mask);
+        ZLInterface::drawShadowEllipse(g, arrowBound, fontSize * 0.5f,
+                                       ZLInterface::BackgroundColor,
+                                       false, false, true);
+        ZLInterface::drawInnerShadowEllipse(g, arrowBound, fontSize * 0.15f, true);
+        g.restoreState();
     }
 
     juce::Label *createSliderTextBox(juce::Slider &) override {
