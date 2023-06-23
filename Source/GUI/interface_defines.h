@@ -4,35 +4,35 @@
 #include "juce_gui_basics/juce_gui_basics.h"
 
 namespace ZLInterface {
-    auto static const WindowHeight = 280;
-    auto static const WindowWidth = 385;
-    auto static const WindowFixedAspectRatio = 1.375;
-    auto static const WindowMinHeight = 200;
-    auto static const WindowMinWidth = 275;
-    auto static const WindowMaxHeight = WindowMinHeight * 10;
-    auto static const WindowMaxWidth = WindowMinWidth * 10;
+    auto inline const WindowHeight = 280;
+    auto inline const WindowWidth = 385;
+    auto inline const WindowFixedAspectRatio = 1.375;
+    auto inline const WindowMinHeight = 200;
+    auto inline const WindowMinWidth = 275;
+    auto inline const WindowMaxHeight = WindowMinHeight * 10;
+    auto inline const WindowMaxWidth = WindowMinWidth * 10;
 
 
-    auto static const TextColor = juce::Colour(87, 96, 110);
-    auto static const TextInactiveColor = TextColor.withAlpha(0.5f);
-    auto static const TextHideColor = TextColor.withAlpha(0.25f);
-    auto static const BackgroundColor = juce::Colour(214, 223, 236);
-    auto static const BackgroundInactiveColor = BackgroundColor.withAlpha(0.8f);
-    auto static const BackgroundHideColor = BackgroundColor.withAlpha(0.5f);
-    auto static const DarkShadowColor = juce::Colour(168, 172, 178);
-    auto static const BrightShadowColor = juce::Colour(237, 246, 255);
+    auto inline const TextColor = juce::Colour(87, 96, 110);
+    auto inline const TextInactiveColor = TextColor.withAlpha(0.5f);
+    auto inline const TextHideColor = TextColor.withAlpha(0.25f);
+    auto inline const BackgroundColor = juce::Colour(214, 223, 236);
+    auto inline const BackgroundInactiveColor = BackgroundColor.withAlpha(0.8f);
+    auto inline const BackgroundHideColor = BackgroundColor.withAlpha(0.5f);
+    auto inline const DarkShadowColor = juce::Colour(168, 172, 178);
+    auto inline const BrightShadowColor = juce::Colour(237, 246, 255);
 
-    auto static const FontTiny = 0.5f;
-    auto static const FontSmall = 0.75f;
-    auto static const FontNormal = 1.0f;
-    auto static const FontLarge = 1.25f;
-    auto static const FontHuge = 1.5f;
-    auto static const FontHuge2 = 3.0f;
-    auto static const FontHuge3 = 4.5f;
+    auto inline const FontTiny = 0.5f;
+    auto inline const FontSmall = 0.75f;
+    auto inline const FontNormal = 1.0f;
+    auto inline const FontLarge = 1.25f;
+    auto inline const FontHuge = 1.5f;
+    auto inline const FontHuge2 = 3.0f;
+    auto inline const FontHuge3 = 4.5f;
 
-    auto static const RefreshFreqHz = 120;
+    auto inline const RefreshFreqHz = 120;
 
-    static juce::Rectangle<float> fillRoundedShadowRectangle(juce::Graphics &g,
+    inline juce::Rectangle<float> fillRoundedShadowRectangle(juce::Graphics &g,
                                                              juce::Rectangle<float> boxBounds,
                                                              float cornerSize,
                                                              bool curveTopLeft = true,
@@ -69,7 +69,7 @@ namespace ZLInterface {
         return boxBounds;
     }
 
-    static juce::Rectangle<float> fillRoundedInnerShadowRectangle(juce::Graphics &g,
+    inline juce::Rectangle<float> fillRoundedInnerShadowRectangle(juce::Graphics &g,
                                                                   juce::Rectangle<float> boxBounds,
                                                                   float cornerSize,
                                                                   float blurRadius,
@@ -121,7 +121,7 @@ namespace ZLInterface {
         return boxBounds;
     }
 
-    static juce::Rectangle<float> drawShadowEllipse(juce::Graphics &g,
+    inline juce::Rectangle<float> drawShadowEllipse(juce::Graphics &g,
                                                     juce::Rectangle<float> boxBounds,
                                                     float cornerSize,
                                                     juce::Colour mainColour = ZLInterface::BackgroundColor,
@@ -151,7 +151,7 @@ namespace ZLInterface {
         return boxBounds;
     }
 
-    static juce::Rectangle<float> drawInnerShadowEllipse(juce::Graphics &g,
+    inline juce::Rectangle<float> drawInnerShadowEllipse(juce::Graphics &g,
                                                          juce::Rectangle<float> boxBounds,
                                                          float cornerSize,
                                                          bool flip = false) {
@@ -190,7 +190,7 @@ namespace ZLInterface {
         return boxBounds;
     }
 
-    static std::string formatFloat(float x, int precision) {
+    inline std::string formatFloat(float x, int precision) {
         std::stringstream stream;
         stream << std::fixed << std::setprecision(precision) << x;
         return stream.str();
