@@ -1,10 +1,13 @@
-<img src="Docs/logo.svg" width=50%>
+<p float="left">
+  <img src="docs/compact_darkblue_flat.svg" width="33%" />
+  <img src="docs/logo.svg" width="7.5%" />
+</p>
 
 # ZLLMatch
 
 ZLLMatch is a loudness matching plugin.
 
-<img src="Docs/screenshot.png" width=53.47%>
+<img src="docs/screenshot.png" width=53.47%>
 
 ## Usage
 

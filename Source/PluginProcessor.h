@@ -1,7 +1,8 @@
 #pragma once
 
 #include "DSP/Controller.h"
-#include "GUI/interface_defines.h"
+#include "State/dummy_processor.h"
+#include "State/state_definitions.h"
 #include <juce_audio_processors/juce_audio_processors.h>
 
 #if (MSVC)
@@ -10,7 +11,9 @@
 
 class PluginProcessor : public juce::AudioProcessor {
 public:
+    DummyProcessor dummyProcessor;
     juce::AudioProcessorValueTreeState parameters;
+    juce::AudioProcessorValueTreeState states;
 
     PluginProcessor();
     ~PluginProcessor() override;

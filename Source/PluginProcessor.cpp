@@ -7,11 +7,12 @@ PluginProcessor::PluginProcessor()
                           .withInput ("Input", juce::AudioChannelSet::stereo(), true)
                           .withOutput ("Output", juce::AudioChannelSet::stereo(), true)
                           .withInput ("Aux", juce::AudioChannelSet::stereo(), true)),
-      parameters (*this, nullptr, juce::Identifier ("ZLLMatchParameters"), ZLDsp::getParameterLayout()),
+      dummyProcessor(),
+      parameters (*this, nullptr, juce::Identifier ("ZLLMatchParameters"), zldsp::getParameterLayout()),
+      states(dummyProcessor, nullptr, juce::Identifier("ZLLMatchStates"), zlstate::getParameterLayout()),
       controller (this, parameters),
       controllerAttach (controller, parameters) {
-    parameters.state.addChild (
-        { "uiState", { { "width", ZLInterface::WindowWidth }, { "height", ZLInterface::WindowHeight } }, {} }, -1, nullptr);
+
 }
 
 PluginProcessor::~PluginProcessor() = default;

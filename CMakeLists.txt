@@ -2,6 +2,30 @@
 # 3.24.1 is also bundled in CLion as of 2023
 cmake_minimum_required(VERSION 3.24.1)
 
+find_package(Git)
+
+if(GIT_EXECUTABLE)
+  # Generate a git-describe version string from Git repository tags
+  execute_process(
+    COMMAND ${GIT_EXECUTABLE} describe --tags --abbrev=0
+    OUTPUT_VARIABLE GIT_DESCRIBE_VERSION
+    RESULT_VARIABLE GIT_DESCRIBE_ERROR_CODE
+    OUTPUT_STRIP_TRAILING_WHITESPACE
+    )
+  if(NOT GIT_DESCRIBE_ERROR_CODE)
+    set(FOOBAR_VERSION ${GIT_DESCRIBE_VERSION})
+  endif()
+endif()
+
+if(NOT DEFINED FOOBAR_VERSION)
+  set(FOOBAR_VERSION 0.0.0)
+  message(WARNING "Failed to determine VERSION from Git tags. Using default version \"${FOOBAR_VERSION}\".")
+endif()
+
+string(REPLACE "v" "" FOOBAR_VERSION_WITHOUT_V "${FOOBAR_VERSION}")
+
+file(WRITE VERSION "${FOOBAR_VERSION_WITHOUT_V}")
+
 # This is the name of your plugin
 # This cannot have spaces (but PRODUCT_NAME can)
 set(PROJECT_NAME "ZLLMatch")
@@ -69,57 +93,18 @@ juce_add_plugin("${PROJECT_NAME}"
 target_compile_features("${PROJECT_NAME}" PRIVATE cxx_std_20)
 
 # Manually list all .h and .cpp files for the plugin
-set(SourceFiles
-        Source/PluginEditor.h
-        Source/PluginEditor.cpp
-        Source/PluginProcessor.h
-        Source/PluginProcessor.cpp
-
-        Source/DSP/dsp_defines.h
-        Source/DSP/Controller.h
-        Source/DSP/Matcher.h
-        Source/DSP/Monitor.h
-        Source/DSP/Tracker/Tracker.h
-        Source/DSP/Tracker/RMSTracker.h
-        Source/DSP/Tracker/LUFSTracker.h
-
-        Source/DSP/LUFSMeter/Ebu128LoudnessMeter.h
-        Source/DSP/LUFSMeter/Ebu128LoudnessMeter.cpp
-        Source/DSP/LUFSMeter/filters/SecondOrderIIRFilter.h
-        Source/DSP/LUFSMeter/filters/SecondOrderIIRFilter.cpp
-
-        Source/GUI/interface_defines.h
-        Source/GUI/ButtonComponent.h
-        Source/GUI/ButtonLookAndFeel.h
-        Source/GUI/ComboboxComponent.h
-        Source/GUI/ComboboxLookAndFeel.h
-        Source/GUI/ChangingValueComponent.h
-        Source/GUI/NameLookAndFeel.h
-        Source/GUI/RotarySliderComponent.h
-        Source/GUI/RotarySliderLookAndFeel.h
-
-        Source/Panel/MainPanel.h
-        Source/Panel/MainPanel.cpp
-        Source/Panel/TopPanel.h
-        Source/Panel/TopPanel.cpp
-        Source/Panel/MidPanel.h
-        Source/Panel/MidPanel.cpp
-        Source/Panel/BottomPanel.h
-        Source/Panel/BottomPanel.cpp
-        Source/Panel/LogoPanel.h
-        Source/Panel/LogoPanel.cpp
-        )
-
+file(GLOB_RECURSE SourceFiles CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/*.cpp" "${CMAKE_CURRENT_SOURCE_DIR}/source/*.h")
 target_sources("${PROJECT_NAME}" PRIVATE ${SourceFiles})
 
 # No, we don't want our source buried in extra nested folders
 set_target_properties("${PROJECT_NAME}" PROPERTIES FOLDER "")
 
 # The Xcode source tree should uhhh, still look like the source tree, yo
-source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/Source PREFIX "" FILES ${SourceFiles})
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR}/source PREFIX "" FILES ${SourceFiles})
 
 # Setup our binary data as a target
 juce_add_binary_data(Assets SOURCES
+        resources/zlaudio.svg
         resources/logo.svg
         resources/font/OpenSans-SemiBold.ttf)
 

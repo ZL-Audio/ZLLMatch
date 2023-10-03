@@ -27,7 +27,7 @@ public:
         matcher.reset();
         mainMonitor.reset();
         targetMonitor.reset();
-        gain = ZLDsp::gain::defaultV;
+        gain = zldsp::gain::defaultV;
     }
 
     void process(juce::AudioBuffer<float> &buffer) noexcept {
@@ -36,14 +36,14 @@ public:
             reset();
             toReset.store(false);
         }
-        if (modeID == ZLDsp::mode::learn && m_processor->getPlayHead()->getPosition()->getIsPlaying()) {
+        if (modeID == zldsp::mode::learn && m_processor->getPlayHead()->getPosition()->getIsPlaying()) {
             mainMonitor.process(m_processor->getBusBuffer(buffer, true, 0),
                                 gate.load());
-            if (sideID == ZLDsp::side::aux && m_processor->getBusCount(true) >= 2) {
+            if (sideID == zldsp::side::aux && m_processor->getBusCount(true) >= 2) {
                 targetMonitor.process(m_processor->getBusBuffer(buffer, true, 1),
                                       gate.load());
             }
-            if (periodID == ZLDsp::period::whole) {
+            if (periodID == zldsp::period::whole) {
                 return;
             }
             if (learning) {
@@ -58,12 +58,12 @@ public:
                     learning = true;
                 }
             }
-        } else if (modeID == ZLDsp::mode::effect) {
+        } else if (modeID == zldsp::mode::effect) {
             gain = matcher.getDiff();
             auto currentGain = juce::Decibels::decibelsToGain(gain * strength);
             auto mainBuffer = m_processor->getBusBuffer(buffer, true, 0);
             mainBuffer.applyGain(static_cast<float>(currentGain));
-        } else if (modeID == ZLDsp::mode::envelope) {
+        } else if (modeID == zldsp::mode::envelope) {
             auto currentGain = juce::Decibels::decibelsToGain(gain * strength);
             auto mainBuffer = m_processor->getBusBuffer(buffer, true, 0);
             mainBuffer.applyGain(static_cast<float>(currentGain));
@@ -80,14 +80,14 @@ public:
     }
 
     void setModeID(int ID) {
-        if (modeID == ZLDsp::mode::learn && ID == ZLDsp::mode::effect &&
+        if (modeID == zldsp::mode::learn && ID == zldsp::mode::effect &&
             periodID == 0) {
             matcher.setPosition(std::numeric_limits<int64_t>::max());
             learnDiff();
             mainMonitor.reset();
             targetMonitor.reset();
         }
-        if (ID == ZLDsp::mode::learn) {
+        if (ID == zldsp::mode::learn) {
             toReset = true;
         }
         modeID = ID;
@@ -130,29 +130,29 @@ private:
     Monitor<FloatType> mainMonitor, targetMonitor;
     Matcher<FloatType> matcher;
     std::atomic<bool> learning = false, toReset = false;
-    std::atomic<FloatType> gain = ZLDsp::gain::defaultV;
+    std::atomic<FloatType> gain = zldsp::gain::defaultV;
 
     std::atomic<FloatType> strength =
-            ZLDsp::strength::formatV(ZLDsp::strength::defaultV);
-    std::atomic<FloatType> gate = ZLDsp::gate::defaultV;
-    std::atomic<FloatType> target = ZLDsp::target::defaultV;
-    std::atomic<FloatType> bound = ZLDsp::bound::defaultV;
+            zldsp::strength::formatV(zldsp::strength::defaultV);
+    std::atomic<FloatType> gate = zldsp::gate::defaultV;
+    std::atomic<FloatType> target = zldsp::target::defaultV;
+    std::atomic<FloatType> bound = zldsp::bound::defaultV;
 
-    std::atomic<bool> ceil = ZLDsp::ceil::defaultV;
+    std::atomic<bool> ceil = zldsp::ceil::defaultV;
 
-    std::atomic<int> modeID = ZLDsp::mode::defaultI;
-    std::atomic<int> loudnessID = ZLDsp::loudness::defaultI;
-    std::atomic<int> periodID = ZLDsp::period::defaultI;
-    std::atomic<int> sideID = ZLDsp::side::defaultI;
+    std::atomic<int> modeID = zldsp::mode::defaultI;
+    std::atomic<int> loudnessID = zldsp::loudness::defaultI;
+    std::atomic<int> periodID = zldsp::period::defaultI;
+    std::atomic<int> sideID = zldsp::side::defaultI;
 
     void learnDiff() {
-        if (sideID == ZLDsp::side::aux && m_processor->getBusCount(true) >= 2) {
+        if (sideID == zldsp::side::aux && m_processor->getBusCount(true) >= 2) {
             matcher.learnDiff(mainMonitor.getLoudness(),
                               targetMonitor.getLoudness(),
                               mainMonitor.getPeak());
         } else {
             matcher.learnDiff(mainMonitor.getLoudness(),
-                              ZLDsp::loudness::getEmptyLoudness<FloatType>(),
+                              zldsp::loudness::getEmptyLoudness<FloatType>(),
                               mainMonitor.getPeak());
         }
     }
@@ -172,20 +172,20 @@ public:
     ~ControllerAttach() override { stopTimer(); }
 
     void timerCallback() override {
-        if (modeID == ZLDsp::mode::effect) {
-            apvts->getParameter(ZLDsp::gain::ID)->beginChangeGesture();
-            apvts->getParameter(ZLDsp::gain::ID)
+        if (modeID == zldsp::mode::effect) {
+            apvts->getParameter(zldsp::gain::ID)->beginChangeGesture();
+            apvts->getParameter(zldsp::gain::ID)
                     ->setValueNotifyingHost(
-                            ZLDsp::gain::range.convertTo0to1(controller->getGain()));
-            apvts->getParameter(ZLDsp::gain::ID)->endChangeGesture();
+                            zldsp::gain::range.convertTo0to1(controller->getGain()));
+            apvts->getParameter(zldsp::gain::ID)->endChangeGesture();
         }
     }
 
     void addListeners() {
-        std::array IDs{ZLDsp::loudness::ID, ZLDsp::period::ID, ZLDsp::side::ID,
-                       ZLDsp::mode::ID, ZLDsp::ceil::ID, ZLDsp::strength::ID,
-                       ZLDsp::gate::ID, ZLDsp::target::ID, ZLDsp::bound::ID,
-                       ZLDsp::gain::ID};
+        std::array IDs{zldsp::loudness::ID, zldsp::period::ID, zldsp::side::ID,
+                       zldsp::mode::ID, zldsp::ceil::ID, zldsp::strength::ID,
+                       zldsp::gate::ID, zldsp::target::ID, zldsp::bound::ID,
+                       zldsp::gain::ID};
         for (auto &ID: IDs) {
             apvts->addParameterListener(ID, this);
         }
@@ -193,33 +193,33 @@ public:
 
     void parameterChanged(const juce::String &parameterID,
                           float newValue) override {
-        if (parameterID == ZLDsp::loudness::ID) {
+        if (parameterID == zldsp::loudness::ID) {
             controller->setLoudnessID(static_cast<int>(newValue));
-        } else if (parameterID == ZLDsp::period::ID) {
+        } else if (parameterID == zldsp::period::ID) {
             controller->setPeriodID(static_cast<int>(newValue));
-        } else if (parameterID == ZLDsp::side::ID) {
+        } else if (parameterID == zldsp::side::ID) {
             controller->setSideID(static_cast<int>(newValue));
-        } else if (parameterID == ZLDsp::mode::ID) {
+        } else if (parameterID == zldsp::mode::ID) {
             modeID = static_cast<int>(newValue);
-            if (modeID == ZLDsp::mode::effect) {
+            if (modeID == zldsp::mode::effect) {
                 startTimerHz(60);
             } else {
                 stopTimer();
             }
             controller->setModeID(static_cast<int>(newValue));
-        } else if (parameterID == ZLDsp::ceil::ID) {
+        } else if (parameterID == zldsp::ceil::ID) {
             controller->setCeil(static_cast<bool>(newValue));
-        } else if (parameterID == ZLDsp::strength::ID) {
+        } else if (parameterID == zldsp::strength::ID) {
             controller->setStrength(
-                    ZLDsp::strength::formatV(static_cast<FloatType>(newValue)));
-        } else if (parameterID == ZLDsp::gate::ID) {
+                    zldsp::strength::formatV(static_cast<FloatType>(newValue)));
+        } else if (parameterID == zldsp::gate::ID) {
             controller->setGate(static_cast<FloatType>(newValue));
-        } else if (parameterID == ZLDsp::target::ID) {
+        } else if (parameterID == zldsp::target::ID) {
             controller->setTarget(static_cast<FloatType>(newValue));
-        } else if (parameterID == ZLDsp::bound::ID) {
+        } else if (parameterID == zldsp::bound::ID) {
             controller->setBound(static_cast<FloatType>(newValue));
-        } else if (parameterID == ZLDsp::gain::ID) {
-            if (modeID == ZLDsp::mode::envelope) {
+        } else if (parameterID == zldsp::gain::ID) {
+            if (modeID == zldsp::mode::envelope) {
                 controller->setGain(static_cast<FloatType>(newValue));
             }
         }

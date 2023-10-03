@@ -10,8 +10,8 @@
 
 template<typename FloatType>
 struct Translator {
-    FloatType mainLoudness[ZLDsp::loudness::loudnessNUM];
-    FloatType targetLoudness[ZLDsp::loudness::loudnessNUM];
+    FloatType mainLoudness[zldsp::loudness::loudnessNUM];
+    FloatType targetLoudness[zldsp::loudness::loudnessNUM];
     FloatType peak;
     int64_t position;
 };
@@ -29,8 +29,8 @@ public:
     }
 
     LoudnessPos(Translator<FloatType> translator) {
-        m_mainLoudness.assign(translator.mainLoudness, translator.mainLoudness + ZLDsp::loudness::loudnessNUM);
-        m_targetLoudness.assign(translator.targetLoudness, translator.targetLoudness + ZLDsp::loudness::loudnessNUM);
+        m_mainLoudness.assign(translator.mainLoudness, translator.mainLoudness + zldsp::loudness::loudnessNUM);
+        m_targetLoudness.assign(translator.targetLoudness, translator.targetLoudness + zldsp::loudness::loudnessNUM);
         m_peak = translator.peak;
         m_position = translator.position;
     }
@@ -52,7 +52,7 @@ public:
     int64_t getPosition() { return m_position; }
 
     size_t getSize() {
-        return sizeof(FloatType) * (ZLDsp::loudness::loudnessNUM * 2 + 1) + sizeof(int64_t);
+        return sizeof(FloatType) * (zldsp::loudness::loudnessNUM * 2 + 1) + sizeof(int64_t);
     }
 
     Translator<FloatType> toStruct() {
@@ -77,8 +77,8 @@ public:
 
     void reset() {
         diffs.clear();
-        diffs.emplace_back(ZLDsp::loudness::getEmptyLoudness<FloatType>(),
-                           ZLDsp::loudness::getEmptyLoudness<FloatType>(), 0, m_position);
+        diffs.emplace_back(zldsp::loudness::getEmptyLoudness<FloatType>(),
+                           zldsp::loudness::getEmptyLoudness<FloatType>(), 0, m_position);
         prev_id = 0;
     }
 
@@ -114,7 +114,7 @@ public:
                 prev_id = index_id;
                 auto gain = diffs[index_id].getGain(
                         static_cast<size_t>(loudnessID.load()), ceil.load(),
-                        sideID.load() == ZLDsp::side::value, target.load());
+                        sideID.load() == zldsp::side::value, target.load());
                 gain = juce::jlimit(-bound.load(), bound.load(), gain);
                 return gain;
             }
@@ -127,12 +127,12 @@ public:
         for (auto &d: diffs) {
             translators.push_back(d.toStruct());
         }
-        return ZLDsp::VectorToBase64String(translators);
+        return zldsp::VectorToBase64String(translators);
     }
 
     void fromString(const juce::String &str) {
         diffs.clear();
-        auto translators = ZLDsp::Base64StringToVector<Translator<FloatType>>(str);
+        auto translators = zldsp::Base64StringToVector<Translator<FloatType>>(str);
         for (auto &t: translators) {
             diffs.emplace_back(t);
         }
@@ -143,11 +143,11 @@ private:
     size_t prev_id = 0;
     std::vector<LoudnessPos<FloatType>> diffs;
 
-    std::atomic<bool> ceil = ZLDsp::ceil::defaultV;
-    std::atomic<int> sideID = ZLDsp::side::defaultI;
-    std::atomic<int> loudnessID = ZLDsp::loudness::defaultI;
-    std::atomic<FloatType> bound = ZLDsp::bound::defaultV;
-    std::atomic<FloatType> target = ZLDsp::target::defaultV;
+    std::atomic<bool> ceil = zldsp::ceil::defaultV;
+    std::atomic<int> sideID = zldsp::side::defaultI;
+    std::atomic<int> loudnessID = zldsp::loudness::defaultI;
+    std::atomic<FloatType> bound = zldsp::bound::defaultV;
+    std::atomic<FloatType> target = zldsp::target::defaultV;
 };
 
 #endif // ZLLMATCH_MATCHER_H

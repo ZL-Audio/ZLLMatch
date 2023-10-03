@@ -2,40 +2,60 @@
 #include "PluginProcessor.h"
 
 //==============================================================================
-PluginEditor::PluginEditor (PluginProcessor& p)
-    : AudioProcessorEditor (&p), processorRef (p), mainPanel (p.parameters, p.getController()), mainPanelAttach (mainPanel, p.parameters) {
+PluginEditor::PluginEditor(PluginProcessor &p)
+        : AudioProcessorEditor(&p), processorRef(p),
+          property(p.states),
+          mainPanel(p, p.getController()),
+          mainPanelAttach(mainPanel, p.parameters) {
+    for (auto &ID: IDs) {
+        processorRef.states.addParameterListener(ID, this);
+    }
     // set font
-    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor (BinaryData::OpenSansSemiBold_ttf,
-        BinaryData::OpenSansSemiBold_ttfSize);
-    juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypeface (sourceCodePro);
+    auto sourceCodePro = juce::Typeface::createSystemTypefaceFor(BinaryData::OpenSansSemiBold_ttf,
+                                                                 BinaryData::OpenSansSemiBold_ttfSize);
+    juce::LookAndFeel::getDefaultLookAndFeel().setDefaultSansSerifTypeface(sourceCodePro);
 
     // add main panel
-    addAndMakeVisible (mainPanel);
+    addAndMakeVisible(mainPanel);
 
     // set size & size listener
-    setResizeLimits (ZLInterface::WindowMinWidth, ZLInterface::WindowMinHeight, ZLInterface::WindowMaxWidth, ZLInterface::WindowMaxHeight);
-    getConstrainer()->setFixedAspectRatio (ZLInterface::WindowFixedAspectRatio);
-    setResizable (true, p.wrapperType != PluginProcessor::wrapperType_AudioUnitv3);
-    lastUIWidth.referTo (p.parameters.state.getChildWithName ("uiState").getPropertyAsValue ("width", nullptr));
-    lastUIHeight.referTo (p.parameters.state.getChildWithName ("uiState").getPropertyAsValue ("height", nullptr));
-    setSize (lastUIWidth.getValue(), lastUIHeight.getValue());
-    lastUIWidth.addListener (this);
-    lastUIHeight.addListener (this);
+    setResizeLimits(zlstate::windowW::minV, zlstate::windowH::minV, zlstate::windowW::maxV, zlstate::windowH::maxV);
+    getConstrainer()->setFixedAspectRatio(
+            static_cast<float>(zlstate::windowW::defaultV) / static_cast<float>(zlstate::windowH::defaultV));
+    setResizable(true, p.wrapperType != PluginProcessor::wrapperType_AudioUnitv3);
+    lastUIWidth.referTo(p.states.getParameterAsValue(zlstate::windowW::ID));
+    lastUIHeight.referTo(p.states.getParameterAsValue(zlstate::windowH::ID));
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
+    lastUIWidth.addListener(this);
+    lastUIHeight.addListener(this);
 }
 
-PluginEditor::~PluginEditor() = default;
+PluginEditor::~PluginEditor()  {
+    for (auto &ID: IDs) {
+        processorRef.states.removeParameterListener(ID, this);
+    }
+}
 
 //==============================================================================
-void PluginEditor::paint (juce::Graphics& g) {
-    juce::ignoreUnused (g);
+void PluginEditor::paint(juce::Graphics &g) {
+    juce::ignoreUnused(g);
 }
 
 void PluginEditor::resized() {
-    mainPanel.setBounds (getLocalBounds());
+    mainPanel.setBounds(getLocalBounds());
     lastUIWidth = getWidth();
     lastUIHeight = getHeight();
 }
 
-void PluginEditor::valueChanged (juce::Value&) {
-    setSize (lastUIWidth.getValue(), lastUIHeight.getValue());
+void PluginEditor::valueChanged(juce::Value &) {
+    setSize(lastUIWidth.getValue(), lastUIHeight.getValue());
+}
+
+void PluginEditor::parameterChanged(const juce::String &parameterID, float newValue) {
+    juce::ignoreUnused(parameterID, newValue);
+    triggerAsyncUpdate();
+}
+
+void PluginEditor::handleAsyncUpdate() {
+    property.saveAPVTS(processorRef.states);
 }
