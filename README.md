@@ -7,7 +7,7 @@
 
 ZLLMatch is a loudness matching plugin.
 
-<img src="docs/screenshot.png" width=53.47%>
+<img src="docs/screenshot.png" width=54.01%>
 
 ## Usage
 
