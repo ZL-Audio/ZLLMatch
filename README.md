@@ -4,6 +4,7 @@
 </p>
 
 # ZLLMatch
+![pluginval](<https://github.com/ZL-Audio/ZLLMatch/workflows/macOS\/Windows\/Linux Test/badge.svg?branch=main>) 
 
 ZLLMatch is a loudness matching plugin.
 
