@@ -115,7 +115,8 @@ public:
                 auto gain = diffs[index_id].getGain(
                         static_cast<size_t>(loudnessID.load()), ceil.load(),
                         sideID.load() == zldsp::side::value, target.load());
-                gain = juce::jlimit(-bound.load(), bound.load(), gain);
+                auto _bound = bound.load();
+                gain = juce::jlimit(-_bound, _bound, gain);
                 return gain;
             }
         }

@@ -36,35 +36,37 @@ public:
             reset();
             toReset.store(false);
         }
-        if (modeID == zldsp::mode::learn && m_processor->getPlayHead()->getPosition()->getIsPlaying()) {
+        auto _modeID = modeID.load();
+        auto _gate = gate.load();
+        if (_modeID == zldsp::mode::learn && m_processor->getPlayHead()->getPosition()->getIsPlaying()) {
             mainMonitor.process(m_processor->getBusBuffer(buffer, true, 0),
-                                gate.load());
+                                _gate);
             if (sideID == zldsp::side::aux && m_processor->getBusCount(true) >= 2) {
                 targetMonitor.process(m_processor->getBusBuffer(buffer, true, 1),
-                                      gate.load());
+                                      _gate);
             }
             if (periodID == zldsp::period::whole) {
                 return;
             }
             if (learning) {
-                if (mainMonitor.getBufferPeak() < gate) {
+                if (mainMonitor.getBufferPeak() < _gate) {
                     learnDiff();
                     mainMonitor.reset();
                     targetMonitor.reset();
                     learning = false;
                 }
             } else {
-                if (mainMonitor.getLoudness()[static_cast<size_t>(loudnessID.load())] > gate) {
+                if (mainMonitor.getLoudness()[static_cast<size_t>(loudnessID.load())] > _gate) {
                     learning = true;
                 }
             }
-        } else if (modeID == zldsp::mode::effect) {
-            gain = matcher.getDiff();
-            auto currentGain = juce::Decibels::decibelsToGain(gain * strength);
+        } else if (_modeID == zldsp::mode::effect) {
+            gain.store(matcher.getDiff());
+            auto currentGain = juce::Decibels::decibelsToGain(gain.load() * strength.load());
             auto mainBuffer = m_processor->getBusBuffer(buffer, true, 0);
             mainBuffer.applyGain(static_cast<float>(currentGain));
-        } else if (modeID == zldsp::mode::envelope) {
-            auto currentGain = juce::Decibels::decibelsToGain(gain * strength);
+        } else if (_modeID == zldsp::mode::envelope) {
+            auto currentGain = juce::Decibels::decibelsToGain(gain.load() * strength.load());
             auto mainBuffer = m_processor->getBusBuffer(buffer, true, 0);
             mainBuffer.applyGain(static_cast<float>(currentGain));
         }
