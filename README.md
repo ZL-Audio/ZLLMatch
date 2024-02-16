@@ -34,7 +34,7 @@ See the releases for the latest version.
 
 ## License
 
-ZLLMatch has a GPLv3 license, as found in the [LICENSE](LICENSE) file.
+ZLLMatch has a GPLv3 license, as found in the [LICENSE.md](LICENSE.md) file.
 
 Copyright (c) 2023 - [zsliu98](https://github.com/zsliu98)
 
